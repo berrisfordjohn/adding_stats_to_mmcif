@@ -8,6 +8,7 @@ class mmcifHandling:
     def __init__(self, fileName, datablock=0, atom_site=False):
         self.f = fileName
         self.cifObj = None
+        self.atom_site = atom_site
         self.datablock = datablock
 
     def parse_mmcif_all(self):
@@ -15,7 +16,7 @@ class mmcifHandling:
         cfr = mmcif.CifFileReader()
         try:
             # parse the cif file
-            if atom_site == False:
+            if self.atom_site == False:
                 self.cifObj = cfr.read(self.f, output='cif_dictionary', ignore=["_atom_site", "_atom_site_anisotrop"]).values()
             else:
                 self.cifObj = cfr.read(self.f, output='cif_dictionary').values()

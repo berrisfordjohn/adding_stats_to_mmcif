@@ -76,10 +76,45 @@ class aimlessReport:
 
         return self.stats_dict
 
+    def get_data_from_table(self):
+        cif_cat = 'anisotropy'
+        ccp4tables = self.root.findall(".//CCP4Table")
+        logging.debug(ccp4tables)
+        for table in ccp4tables:
+            logging.debug(table.attrib)
+            if 'id' in table.attrib:
+                if table.attrib['id'] == 'AnisotropyAnalysis':
+                    headers = table.find('headers')
+                    separator = headers.attrib['separator']
+                    logging.debug('separator: "%s"' % separator)
+                    if separator == ' ':
+                        header_list = headers.text.split()
+                    else:
+                        header_list = headers.text.split(separator)
+                    data = table.find('data').text
+                    logging.debug(data)
+                    data_lines = data.strip().split('\n')
+                    logging.debug(data_lines)
+                    number_of_data_values = len(data_lines)
+                    logging.debug('number of data items: %s' % number_of_data_values)
+                    for instance, d in enumerate(data_lines):
+                        if separator == ' ':
+                            d = d.strip().split()
+                        else:
+                            d = d.strip().split(separator)
+                        logging.debug(d)
+                        for header_pos, item in enumerate(header_list):
+                            logging.debug('%s - position %s' % (item, header_pos))
+                            value = d[header_pos]
+                            self.stats_dict.setdefault(cif_cat, {}).setdefault(item, ['']*number_of_data_values)[instance] = value
+        return self.stats_dict
+
+
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     xml_file = 'test_data/gam-pipe.xml'
     ar = aimlessReport(xml_file=xml_file)
     ar.parse_xml()
-    ar.get_data()
+    #ar.get_data()
+    ar.get_data_from_table()
     pprint.pprint(ar.stats_dict)

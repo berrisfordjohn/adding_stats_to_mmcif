@@ -43,64 +43,49 @@ class mmcifHandling:
             self.getDatablock()
         if self.category[0] != '_':
             self.category = '_' + self.category
+        return self.category
 
-    def getCategory(self, category):
-        self.prepare_cat(category=category)
-        category_1 = self.cif_categories.getCategory(self.category)
+    def getCategoryObject(self, category):
+        category = self.prepare_cat(category=category)
+        category_1 = self.cif_categories.getCategory(category)
         return category_1
 
     def getCatItemValues(self, category, item):
-        self.prepare_cat(category=category)
-        values = self.cif_categories.getCategory(category=self.category).getItem(item_name=item).value
+        category = self.prepare_cat(category=category)
+        values = self.cif_categories.getCategory(category=category).getItem(item_name=item).value
 
         return values
 
-    def getCatDict(self, category):
+    def getCategory(self, category):
         mmcif_dictionary = dict()
         self.prepare_cat(category=category)
         items = self.cif_categories.getCategory(category=self.category).getItemNames()
         for cif_item in items:
-            values = self.getCatItemValues(category=category, item=cif_item)
+            values = self.getCatItemValues(category=self.category, item=cif_item)
             mmcif_dictionary.setdefault(category, {})[cif_item] = values
 
         return mmcif_dictionary
 
-    def getCatList(self, category):
-        if not self.cif_categories:
-            self.getDatablock()
-        if category[0] != '_':
-            category = '_' + category
-        if category in self.cif_categories:
-            logging.debug('Category %s found' % category)
-            for item in self.cif_categories[category]:
-                value = self.cif_categories[category][item]
-                if not isinstance(value, list):
-                    self.cif_categories[category][item] = [value]
-            return self.cif_categories[category]
-        else:
-            logging.debug('Category %s not found' % category)
-            return None
+    def removeCategory(self, category):
+        category = self.prepare_cat(category=category)
+        self.cif_categories.setCategory(category=category).remove()
 
-    def addToCif(self, mmcif_dictionary):
-        for cat in mmcif_dictionary:
-            for item in mmcif_dictionary[cat]:
-                self.cif_categories.setCategory(cat).setItem(item).setValue(mmcif_dictionary[cat][item])
+    def addToCif(self, data_dictionary):
+        try:
+            if data_dictionary:
+                for category in data_dictionary:
+                    self.prepare_cat(category=category)
+                    self.removeCategory(category=category)
+                    for item in data_dictionary[category]:
+                        values = data_dictionary[category][item]
+                        logging.debug('setting: %s.%s to %s' % (self.category, item, ','.join(values)))
+                        self.cif_categories.setCategory(self.category).setItem(item).setValue(values)
+        except Exception as e:
+            logging.error(e)
 
     def writeCif(self, fileName):
         cfd1 = mmcif.CifFileWriter(fileName)
         cfd1.write(self.cifObj, preserve_order=True)
-
-    def reformat_dict_to_list(self, catDict):
-        output_format = dict()
-        for cif_cat in catDict:
-            number_of_instances = len(catDict[cif_cat])
-            for instance, values in enumerate(catDict[cif_cat]):
-                for cif_item in values:
-                    value = values[cif_item]
-                    output_format.setdefault(cif_cat, {}).setdefault(cif_item, [''] * number_of_instances)[
-                        instance] = value
-
-        return output_format
 
 
 if __name__ == '__main__':
@@ -109,8 +94,10 @@ if __name__ == '__main__':
     cif_file = 'test_data/3zt9.cif'
     mh = mmcifHandling(fileName=cif_file)
     mh.parse_mmcif()
-    test_dict = mh.getCatDict(category=cat)
+    test_dict = mh.getCategory(category=cat)
     pprint.pprint(test_dict)
+    mh.removeCategory(category=cat)
+    mh.removeCategory(category='fake_cat')
     fake_data = {'test_cat': {'item1': [1, 2, 3], 'item2': [2, 3, 4]}}
     mh.addToCif(mmcif_dictionary=fake_data)
     mh.writeCif(fileName=cif_file + 'test')

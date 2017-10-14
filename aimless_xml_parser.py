@@ -2,6 +2,7 @@
 import xml.etree.ElementTree as ET
 import logging
 import pprint
+
 logger = logging.getLogger()
 
 stats_remap = {
@@ -9,7 +10,7 @@ stats_remap = {
                'cif_to_xml':
                    {'d_resolution_low': 'ResolutionLow',
                     'd_resolution_high': 'ResolutionHigh',
-                    'pdbx_Rmerge_I_obs':'Rmerge',
+                    'pdbx_Rmerge_I_obs': 'Rmerge',
                     'pdbx_Rrim_I_all': 'Rmeas',
                     'pdbx_Rpim_I_all': 'Rpim',
                     'number_measured_obs': 'NumberReflections',
@@ -31,6 +32,8 @@ stats_remap = {
                           'pdbx_redundancy': 'Multiplicity'}}
 }
 
+extra_cif_items = {'pdbx_diffrn_id': '1',
+                   'pdbx_ordinal': ''}
 
 class aimlessReport:
     def __init__(self, xml_file):
@@ -49,8 +52,9 @@ class aimlessReport:
             for cif_cat in stats_remap:
 
                 location_list = stats_remap[cif_cat]['pos_list']
-                for location in location_list:
-                    item_dict = dict()
+                number_of_values = len(location_list)
+
+                for instance, location in enumerate(location_list):
                     for cif_item in stats_remap[cif_cat]['cif_to_xml']:
                         logging.debug(cif_item)
                         xml_item = stats_remap[cif_cat]['cif_to_xml'][cif_item]
@@ -59,12 +63,18 @@ class aimlessReport:
                         xml_item_for_location = xml_node.find(location)
 
                         logging.debug(xml_item_for_location)
-                        xml_value = xml_item_for_location.text
+                        xml_value = xml_item_for_location.text.strip()
                         logging.debug(xml_value)
-                        item_dict[cif_item] = xml_value.strip()
 
-                    self.stats_dict.setdefault(cif_cat, []).append(item_dict)
+                        self.stats_dict.setdefault(cif_cat, {}).setdefault(cif_item, ['']*number_of_values)[instance] = xml_value
+                    for cif_item in extra_cif_items:
+                        if extra_cif_items[cif_item]:
+                            value = extra_cif_items[cif_item]
+                        else:
+                            value = instance + 1
+                        self.stats_dict.setdefault(cif_cat, {}).setdefault(cif_item, [''] * number_of_values)[instance] = str(value)
 
+        return self.stats_dict
 
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)

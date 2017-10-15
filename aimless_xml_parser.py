@@ -2,6 +2,7 @@
 import xml.etree.ElementTree as ET
 import logging
 import pprint
+import os
 
 logger = logging.getLogger()
 
@@ -32,8 +33,9 @@ stats_remap = {
                           'pdbx_redundancy': 'Multiplicity'}}
 }
 
-extra_cif_items = {'pdbx_diffrn_id': '1',
-                   'pdbx_ordinal': ''}
+extra_cif_items = {'pdbx_ordinal': ''}
+
+table_keys = {'deposition': 'reflns'}
 
 class aimlessReport:
     def __init__(self, xml_file):
@@ -43,12 +45,26 @@ class aimlessReport:
         self.stats_dict = dict()
 
     def parse_xml(self):
-        self.tree = ET.parse(self.xml_file)
-        self.root = self.tree.getroot()
+        try:
+            if os.path.exists(xml_file):
+                self.tree = ET.parse(self.xml_file)
+                self.root = self.tree.getroot()
+                if self.root:
+                    if self.root.tag == 'AIMLESS_PIPE':
+                        logging.debug('is an aimless xml file')
+                        return True
+            logging.debug('not an aimless xml file')
+            return False
+
+        except Exception as e:
+            logging.error(e)
+            return False
 
     def get_data(self):
         datasetresultnodes = self.root.findall(".//Result/Dataset")
+        data_set_counter = 0
         for datasetresultnode in datasetresultnodes:
+            data_set_counter += 1
             for cif_cat in stats_remap:
 
                 location_list = stats_remap[cif_cat]['pos_list']
@@ -77,13 +93,14 @@ class aimlessReport:
         return self.stats_dict
 
     def get_data_from_table(self):
-        cif_cat = 'anisotropy'
         ccp4tables = self.root.findall(".//CCP4Table")
         logging.debug(ccp4tables)
         for table in ccp4tables:
             logging.debug(table.attrib)
             if 'id' in table.attrib:
-                if table.attrib['id'] == 'AnisotropyAnalysis':
+                if table.attrib['id'] in table_keys:
+                    # need to set cif category based on the table name.
+                    cif_cat = table_keys[table.attrib['id']]
                     headers = table.find('headers')
                     separator = headers.attrib['separator']
                     logging.debug('separator: "%s"' % separator)
@@ -110,11 +127,18 @@ class aimlessReport:
         return self.stats_dict
 
 
+    def return_data(self):
+        is_aimless_file = self.parse_xml()
+        if is_aimless_file:
+            self.get_data_from_table()
+            if not self.stats_dict:
+                self.get_data()
+
+        return self.stats_dict
+
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     xml_file = 'test_data/gam-pipe.xml'
     ar = aimlessReport(xml_file=xml_file)
-    ar.parse_xml()
-    #ar.get_data()
-    ar.get_data_from_table()
-    pprint.pprint(ar.stats_dict)
+    xml_data = ar.return_data()
+    pprint.pprint(xml_data)

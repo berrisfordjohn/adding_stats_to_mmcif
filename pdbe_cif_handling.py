@@ -2,6 +2,7 @@
 import logging
 import mmCif.mmcifIO as mmcif
 import pprint
+import os
 
 logger = logging.getLogger()
 
@@ -19,17 +20,22 @@ class mmcifHandling:
         '''parse the mmcif and return a dictionary file'''
         cfr = mmcif.CifFileReader()
         try:
-            # parse the cif file
-            if not self.atom_site:
-                self.cifObj = cfr.read(self.f, output='cif_file', ignore=["_atom_site", "_atom_site_anisotrop"])
-            else:
-                self.cifObj = cfr.read(self.f, output='cif_file')
+            if os.path.exists(self.f):
+                # parse the cif file
+                if not self.atom_site:
+                    self.cifObj = cfr.read(self.f, output='cif_file', ignore=["_atom_site", "_atom_site_anisotrop"])
+                else:
+                    self.cifObj = cfr.read(self.f, output='cif_file')
+
+                if self.cifObj:
+                    return True
+            return False
 
         except Exception as e:
             logging.error("unable to parse mmcif file: %s" % self.f)
             logging.error(e)
 
-        return self.cifObj
+        return False
 
     def getDatablock(self):
         datablocks = self.cifObj.getDataBlockIds()
@@ -93,11 +99,12 @@ if __name__ == '__main__':
     cat = 'reflns'
     cif_file = 'test_data/3zt9.cif'
     mh = mmcifHandling(fileName=cif_file)
-    mh.parse_mmcif()
-    test_dict = mh.getCategory(category=cat)
-    pprint.pprint(test_dict)
-    mh.removeCategory(category=cat)
-    mh.removeCategory(category='fake_cat')
-    fake_data = {'test_cat': {'item1': [1, 2, 3], 'item2': [2, 3, 4]}}
-    mh.addToCif(mmcif_dictionary=fake_data)
-    mh.writeCif(fileName=cif_file + 'test')
+    parsed_cif = mh.parse_mmcif()
+    if parsed_cif:
+        test_dict = mh.getCategory(category=cat)
+        #pprint.pprint(test_dict)
+        mh.removeCategory(category=cat)
+        mh.removeCategory(category='fake_cat')
+        fake_data = {'test_cat': {'item1': ['1', '2', '3'], 'item2': ['2', '3', '4']}}
+        mh.addToCif(data_dictionary=fake_data)
+        mh.writeCif(fileName=cif_file + 'test')

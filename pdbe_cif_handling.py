@@ -3,6 +3,7 @@ import logging
 import mmCif.mmcifIO as mmcif
 import pprint
 import os
+import argparse
 
 logger = logging.getLogger()
 
@@ -95,16 +96,26 @@ class mmcifHandling:
 
 
 if __name__ == '__main__':
-    logger.setLevel(logging.DEBUG)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output_cif', help='output mmcif file', type=str, required=True)
+    parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)
+    parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,
+                        default=logging.INFO)
+
+    args = parser.parse_args()
+
+    logger.setLevel(args.loglevel)
+
+    input_cif = args.input_mmcif
+    output_cif = args.output_cif
+
     cat = 'reflns'
-    cif_file = 'test_data/3zt9.cif'
-    mh = mmcifHandling(fileName=cif_file)
+    mh = mmcifHandling(fileName=input_cif)
     parsed_cif = mh.parse_mmcif()
     if parsed_cif:
         test_dict = mh.getCategory(category=cat)
-        #pprint.pprint(test_dict)
         mh.removeCategory(category=cat)
         mh.removeCategory(category='fake_cat')
         fake_data = {'test_cat': {'item1': ['1', '2', '3'], 'item2': ['2', '3', '4']}}
         mh.addToCif(data_dictionary=fake_data)
-        mh.writeCif(fileName=cif_file + 'test')
+        mh.writeCif(fileName=output_cif)

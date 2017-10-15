@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 import logging
 import pprint
 import os
+import argparse
 
 logger = logging.getLogger()
 
@@ -137,8 +138,15 @@ class aimlessReport:
         return self.stats_dict
 
 if __name__ == '__main__':
-    logger.setLevel(logging.DEBUG)
-    xml_file = 'test_data/gam-pipe.xml'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--xml_file', help='input xml file', type=str, required=True)
+    parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,
+                        default=logging.INFO)
+
+    args = parser.parse_args()
+    logger.setLevel(args.loglevel)
+
+    xml_file = args.xml_file
     ar = aimlessReport(xml_file=xml_file)
     xml_data = ar.return_data()
     pprint.pprint(xml_data)

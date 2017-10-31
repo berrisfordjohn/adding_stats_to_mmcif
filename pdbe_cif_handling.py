@@ -9,7 +9,7 @@ logger = logging.getLogger()
 
 
 class mmcifHandling:
-    def __init__(self, fileName, datablock=0, atom_site=False):
+    def __init__(self, fileName, datablock=0, atom_site=True):
         self.f = fileName
         self.cifObj = None
         self.atom_site = atom_site

@@ -38,6 +38,7 @@ extra_cif_items = {'pdbx_ordinal': ''}
 
 table_keys = {'deposition': 'reflns'}
 
+
 class aimlessReport:
     def __init__(self, xml_file):
         self.xml_file = xml_file
@@ -47,7 +48,7 @@ class aimlessReport:
 
     def parse_xml(self):
         try:
-            if os.path.exists(xml_file):
+            if os.path.exists(self.xml_file):
                 self.tree = ET.parse(self.xml_file)
                 self.root = self.tree.getroot()
                 if self.root:
@@ -83,13 +84,15 @@ class aimlessReport:
                         xml_value = xml_item_for_location.text.strip()
                         logging.debug(xml_value)
 
-                        self.stats_dict.setdefault(cif_cat, {}).setdefault(cif_item, ['']*number_of_values)[instance] = xml_value
+                        self.stats_dict.setdefault(cif_cat, {}).setdefault(cif_item, [''] * number_of_values)[
+                            instance] = xml_value
                     for cif_item in extra_cif_items:
                         if extra_cif_items[cif_item]:
                             value = extra_cif_items[cif_item]
                         else:
                             value = instance + 1
-                        self.stats_dict.setdefault(cif_cat, {}).setdefault(cif_item, [''] * number_of_values)[instance] = str(value)
+                        self.stats_dict.setdefault(cif_cat, {}).setdefault(cif_item, [''] * number_of_values)[
+                            instance] = str(value)
 
         return self.stats_dict
 
@@ -124,9 +127,9 @@ class aimlessReport:
                         for header_pos, item in enumerate(header_list):
                             logging.debug('%s - position %s' % (item, header_pos))
                             value = d[header_pos]
-                            self.stats_dict.setdefault(cif_cat, {}).setdefault(item, ['']*number_of_data_values)[instance] = value
+                            self.stats_dict.setdefault(cif_cat, {}).setdefault(item, [''] * number_of_data_values)[
+                                instance] = value
         return self.stats_dict
-
 
     def return_data(self):
         is_aimless_file = self.parse_xml()
@@ -136,6 +139,7 @@ class aimlessReport:
                 self.get_data()
 
         return self.stats_dict
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

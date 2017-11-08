@@ -96,8 +96,9 @@ class mmcifHandling:
 
 
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('--output_cif', help='output mmcif file', type=str, required=True)
+    parser.add_argument('--output_mmcif', help='output mmcif file', type=str, required=True)
     parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,
                         default=logging.INFO)
@@ -107,7 +108,7 @@ if __name__ == '__main__':
     logger.setLevel(args.loglevel)
 
     input_cif = args.input_mmcif
-    output_cif = args.output_cif
+    output_cif = args.output_mmcif
 
     cat = 'reflns'
     mh = mmcifHandling(fileName=input_cif)

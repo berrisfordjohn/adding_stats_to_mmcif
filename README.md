@@ -3,6 +3,7 @@
 Adds data to an mmCIF file from aimless XML file.
 
 Requires https://github.com/glenveegee/PDBeCIF
+or another mmCIF parser defined in cif_handling.py
 
 typical usage
 

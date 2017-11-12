@@ -57,6 +57,10 @@ class mmcifHandling:
     def getCategory(self, category):
         mmcif_dictionary = dict()
         self.prepare_cat(category=category)
+
+        # currently not supported
+        return mmcif_dictionary
+
         items = self.cif_categories.getCategory(category=self.category).getItemNames()
         for cif_item in items:
             values = self.getCatItemValues(category=self.category, item=cif_item)

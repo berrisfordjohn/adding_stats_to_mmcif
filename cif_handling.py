@@ -3,13 +3,15 @@ import logging
 import argparse
 
 from pdbe_cif_handling import mmcifHandling as pdbe_cif_handling
+from gemmi_cif_handling import mmcifHandling as gemmi_cif_handling
 
 logger = logging.getLogger()
 
 
 class mmcifHandling:
     def __init__(self, fileName, datablock=0, atom_site=True):
-        self.cif_handling = pdbe_cif_handling(fileName=fileName, datablock=datablock, atom_site=atom_site)
+        #self.cif_handling = pdbe_cif_handling(fileName=fileName, datablock=datablock, atom_site=atom_site)
+        self.cif_handling = gemmi_cif_handling(fileName=fileName, datablock=datablock, atom_site=atom_site)
 
     def parse_mmcif(self):
         '''parse the mmcif and return a dictionary file'''

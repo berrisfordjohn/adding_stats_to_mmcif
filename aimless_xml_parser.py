@@ -51,7 +51,7 @@ class aimlessReport:
             if os.path.exists(self.xml_file):
                 self.tree = ET.parse(self.xml_file)
                 self.root = self.tree.getroot()
-                if self.root:
+                if self.root is not None:
                     if self.root.tag == 'AIMLESS_PIPE':
                         logging.debug('is an aimless xml file')
                         return True

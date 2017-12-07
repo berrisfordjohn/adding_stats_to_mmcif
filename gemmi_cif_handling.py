@@ -58,11 +58,8 @@ class mmcifHandling:
         mmcif_dictionary = dict()
         self.prepare_cat(category=category)
 
-        # currently not supported
-        return mmcif_dictionary
-
-        items = self.cif_categories.getCategory(category=self.category).getItemNames()
-        for cif_item in items:
+        cat = self.cif_categories.find_mmcif_category()
+        for cif_item in cat.tags:
             values = self.getCatItemValues(category=self.category, item=cif_item)
             mmcif_dictionary.setdefault(category, {})[cif_item] = values
 
@@ -70,18 +67,16 @@ class mmcifHandling:
 
     def removeCategory(self, category):
         category = self.prepare_cat(category=category)
-        self.cif_categories.delete_category(category)
+        #self.cif_categories.delete_category(category)
 
     def addToCif(self, data_dictionary):
-        # not working yet
-        return False
         try:
             if data_dictionary:
                 for category in data_dictionary:
                     values = data_dictionary[category]
                     category = self.prepare_cat(category=category)
                     self.removeCategory(category=category)
-                    self.cif_categories.set_category(category, values)
+                    self.cif_categories.set_mmcif_category(category, values)
             return True
         except Exception as e:
             logging.error(e)

@@ -6,6 +6,13 @@ import logging
 
 logger = logging.getLogger()
 
+def aimless_software_row():
+    software_row = {}
+    software_row['name'] = 'Aimless'
+    software_row['classification'] = 'data scaling'
+
+    return software_row
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
@@ -29,4 +36,7 @@ if __name__ == '__main__':
         pc = mmcifHandling(fileName=input_cif)
         pc.parse_mmcif()
         pc.addToCif(data_dictionary=xml_data)
+        aimless_dict = aimless_software_row()
+        software_cat = pc.addValuesToCategory(category='software', item_value_dictionary=aimless_dict, ordinal_item='pdbx_ordinal')
+        pc.addToCif(data_dictionary=software_cat)
         pc.writeCif(fileName=output_cif)

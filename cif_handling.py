@@ -35,6 +35,10 @@ class mmcifHandling:
         mmcif_dictionary = self.cif_handling.getCategory(category=category)
         return mmcif_dictionary
 
+    def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
+        mmcif_dictionary = self.cif_handling.addValuesToCategory(category=category, item_value_dictionary=item_value_dictionary, ordinal_item=ordinal_item)
+        return mmcif_dictionary
+
     def removeCategory(self, category):
         self.cif_handling.removeCategory(category=category)
 

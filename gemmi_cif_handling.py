@@ -55,15 +55,42 @@ class mmcifHandling:
         return values
 
     def getCategory(self, category):
+        logging.debug('getCategory')
         mmcif_dictionary = dict()
-        self.prepare_cat(category=category)
+        category = self.prepare_cat(category=category)
 
-        cat = self.cif_categories.find_mmcif_category()
-        for cif_item in cat.tags:
-            values = self.getCatItemValues(category=self.category, item=cif_item)
-            mmcif_dictionary.setdefault(category, {})[cif_item] = values
+        cat = self.cif_categories.find_mmcif_category(category)
+        if cat:
+            for cif_item in cat.tags:
+                cif_item = cif_item.split('.')[-1]
+                logging.debug('mmCIF item: %s' % cif_item)
+                values = self.getCatItemValues(category=category, item=cif_item)
+                mmcif_dictionary.setdefault(category, {})[cif_item] = values
 
         return mmcif_dictionary
+
+    def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
+        category = self.prepare_cat(category=category)
+        current_values = self.getCategory(category=category)
+        if current_values:
+            if category in current_values:
+                for mmcif_item in current_values[category]:
+                    num_current_items = len(current_values[category][mmcif_item])
+                    if mmcif_item in item_value_dictionary:
+                        current_values[category][mmcif_item].append(item_value_dictionary[mmcif_item])
+                    elif mmcif_item == ordinal_item:
+                        ordinal = num_current_items + 1
+                        current_values[category][mmcif_item].append(str(ordinal))
+                    else:
+                        current_values[category][mmcif_item].append('')
+        else:
+            for mmcif_item in item_value_dictionary:
+                current_values.setdefault(category)[mmcif_item] = [item_value_dictionary[mmcif_item]]
+                if mmcif_item == ordinal_item:
+                    current_values.setdefault(category)[mmcif_item] = ['1']
+
+        return current_values
+
 
     def removeCategory(self, category):
         category = self.prepare_cat(category=category)

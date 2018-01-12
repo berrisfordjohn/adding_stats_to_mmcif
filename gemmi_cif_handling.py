@@ -22,12 +22,46 @@ class mmcifHandling:
         # from http://gemmi.readthedocs.io/en/latest/cif-parser.html#python-module
         self.cifObj = cif.read_file(self.f)  # copy all the data from mmCIF file
         if self.cifObj:
-            self.getDatablock()
+            #self.getDataBlockWithMostCat()
+            self.getDataBlockWithAtomSite()
+            #self.getDatablock()
             return True
         return False
 
     def getDatablock(self):
+        logging.debug('datablocks')
+        logging.debug(self.cifObj)
         self.cif_categories = self.cifObj[self.datablock]
+
+    def getDataBlockWithMostCat(self):
+        logging.debug('getDataBlockWithMostCat')
+        largest_num = 0
+        datablockToGet = None
+        for position, datablock in enumerate(self.cifObj):
+            logging.debug(datablock)
+            cif_categories = self.cifObj[position]
+            cats = cif_categories.get_mmcif_category_names()
+            logging.debug(cats)
+            num_cats = len(cats)
+            if num_cats > largest_num:
+                largest_num = num_cats
+                datablockToGet = position
+        logging.debug('datablock with most cat: %s' % datablockToGet)
+        self.cif_categories = self.cifObj[datablockToGet]
+
+    def getDataBlockWithAtomSite(self):
+        logging.debug('getDataBlockWithAtomSite')
+        datablockToGet = None
+        for position, datablock in enumerate(self.cifObj):
+            logging.debug(datablock)
+            cif_categories = self.cifObj[position]
+            atom_site = cif_categories.find_values('_atom_site.id')
+            logging.debug(atom_site)
+            if atom_site:
+                datablockToGet = position
+        logging.debug('datablock with atom_site cat: %s' % datablockToGet)
+        self.cif_categories = self.cifObj[datablockToGet]
+
 
     def prepare_cat(self, category):
         self.category = category
@@ -95,6 +129,7 @@ class mmcifHandling:
     def removeCategory(self, category):
         category = self.prepare_cat(category=category)
         #self.cif_categories.delete_category(category)
+        pass
 
     def addToCif(self, data_dictionary):
         logging.debug('addToCif')
@@ -139,8 +174,6 @@ if __name__ == '__main__':
         logging.debug(mh.cif_categories)
         test = mh.getCatItemsValues(category=cat, items=items)
         print(test)
-        mh.removeCategory(category=cat)
-        mh.removeCategory(category='fake_cat')
         fake_data = {'test_cat': {'item1': ['1', '2', '3'], 'item2': ['2', '3', '4']}}
         added = mh.addToCif(data_dictionary=fake_data)
         mh.writeCif(fileName=output_cif)

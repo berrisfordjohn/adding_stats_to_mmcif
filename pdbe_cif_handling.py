@@ -44,6 +44,39 @@ class mmcifHandling:
         logging.debug(datablocks)
         self.cif_categories = self.cifObj.getDataBlocks()[self.datablock]
 
+    def getDataBlockWithMostCat(self):
+        logging.debug('getDataBlockWithMostCat')
+        largest_num = 0
+        datablockToGet = None
+        datablocks = self.cifObj.getDataBlockIds()
+        logging.debug(datablocks)
+        for datablock in datablocks:
+            logging.debug(datablock)
+            cif_categories = self.cifObj.getDataBlock(datablock)
+            cats = cif_categories.getCategoryIds()
+            logging.debug(cats)
+            num_cats = len(cats)
+            if num_cats > largest_num:
+                largest_num = num_cats
+                datablockToGet = datablock
+        logging.debug('datablock with most cat: %s' % datablockToGet)
+        self.cif_categories = self.cifObj.getDataBlock(datablockToGet)
+
+    def getDataBlockWithAtomSite(self):
+        logging.debug('getDataBlockWithAtomSite')
+        datablockToGet = None
+        datablocks = self.cifObj.getDataBlockIds()
+        logging.debug(datablocks)
+        for datablock in datablocks:
+            logging.debug(datablock)
+            cif_categories = self.cifObj.getDataBlock(datablock)
+            cats = cif_categories.getCategoryIds()
+            logging.debug(cats)
+            if 'atom_site' in cats:
+                datablockToGet = datablock
+        logging.debug('datablock with most cat: %s' % datablockToGet)
+        self.cif_categories = self.cifObj.getDataBlock(datablockToGet)
+
     def prepare_cat(self, category):
         self.category = category
         if not self.cif_categories:
@@ -66,12 +99,40 @@ class mmcifHandling:
     def getCategory(self, category):
         mmcif_dictionary = dict()
         self.prepare_cat(category=category)
-        items = self.cif_categories.getCategory(category=self.category).getItemNames()
-        for cif_item in items:
-            values = self.getCatItemValues(category=self.category, item=cif_item)
-            mmcif_dictionary.setdefault(category, {})[cif_item] = values
+        logging.debug('getCategory')
+        logging.debug(self.category)
+        full_category = self.getCategoryObject(category=category)
+        logging.debug(full_category)
+        if full_category:
+            items = self.cif_categories.getCategory(category=self.category).getItemNames()
+            for cif_item in items:
+                values = self.getCatItemValues(category=self.category, item=cif_item)
+                mmcif_dictionary.setdefault(category, {})[cif_item] = values
 
         return mmcif_dictionary
+
+    def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
+        category = self.prepare_cat(category=category)
+        current_values = self.getCategory(category=category)
+        if current_values:
+            if category in current_values:
+                for mmcif_item in current_values[category]:
+                    num_current_items = len(current_values[category][mmcif_item])
+                    if mmcif_item in item_value_dictionary:
+                        current_values[category][mmcif_item].append(item_value_dictionary[mmcif_item])
+                    elif mmcif_item == ordinal_item:
+                        ordinal = num_current_items + 1
+                        current_values[category][mmcif_item].append(str(ordinal))
+                    else:
+                        current_values[category][mmcif_item].append('')
+        else:
+            current_values = {}
+            for mmcif_item in item_value_dictionary:
+                current_values.setdefault(category)[mmcif_item] = [item_value_dictionary[mmcif_item]]
+                if mmcif_item == ordinal_item:
+                    current_values.setdefault(category)[mmcif_item] = ['1']
+
+        return current_values
 
     def removeCategory(self, category):
         category = self.prepare_cat(category=category)
@@ -114,6 +175,8 @@ if __name__ == '__main__':
     mh = mmcifHandling(fileName=input_cif)
     parsed_cif = mh.parse_mmcif()
     if parsed_cif:
+        #mh.getDataBlockWithMostCat()
+        mh.getDataBlockWithAtomSite()
         test_dict = mh.getCategory(category=cat)
         mh.removeCategory(category=cat)
         mh.removeCategory(category='fake_cat')

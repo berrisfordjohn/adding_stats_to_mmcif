@@ -41,28 +41,39 @@ table_keys = {'deposition': 'reflns'}
 
 class aimlessReport:
     def __init__(self, xml_file):
+        """
+        :param xml_file: input aimless XML file
+        """
         self.xml_file = xml_file
         self.tree = None
         self.root = None
         self.stats_dict = dict()
 
     def parse_xml(self):
-        try:
-            if os.path.exists(self.xml_file):
-                self.tree = ET.parse(self.xml_file)
-                self.root = self.tree.getroot()
-                if self.root is not None:
-                    if self.root.tag == 'AIMLESS_PIPE':
-                        logging.debug('is an aimless xml file')
-                        return True
-            logging.debug('not an aimless xml file')
-            return False
+        """
+            checks input file is XML file, parses it.
+            prevents parsing twice by checking if self.tree already exists
+        :return: True if a parsed aimless XML file, False if not
+        """
+        if not self.tree:
+            try:
+                if os.path.exists(self.xml_file):
+                    self.tree = ET.parse(self.xml_file)
+                    self.root = self.tree.getroot()
+            except Exception as e:
+                logging.error(e)
+                return False
 
-        except Exception as e:
-            logging.error(e)
-            return False
+        if self.root is not None:
+            if self.root.tag == 'AIMLESS_PIPE':
+                logging.debug('is an aimless xml file')
+                return True
+        return False
 
     def get_data(self):
+        """
+        :return: statistics dictionary from Dataset XML tag.
+        """
         datasetresultnodes = self.root.findall(".//Result/Dataset")
         data_set_counter = 0
         for datasetresultnode in datasetresultnodes:
@@ -97,6 +108,9 @@ class aimlessReport:
         return self.stats_dict
 
     def get_data_from_table(self):
+        """
+        :return: dictionary of statistics from CCP4 tables.
+        """
         ccp4tables = self.root.findall(".//CCP4Table")
         logging.debug(ccp4tables)
         for table in ccp4tables:
@@ -132,6 +146,10 @@ class aimlessReport:
         return self.stats_dict
 
     def return_data(self):
+        """
+        master function which returns data from aimless XML file.
+        :return:
+        """
         is_aimless_file = self.parse_xml()
         if is_aimless_file:
             self.get_data_from_table()
@@ -140,6 +158,18 @@ class aimlessReport:
 
         return self.stats_dict
 
+    def get_aimlesss_version(self):
+        """
+        :return: aimless version from the XML file
+        """
+        version = None
+        is_aimless_file = self.parse_xml()
+        if is_aimless_file:
+            header = self.root.findall(".//POINTLESS")
+            for head in header:
+                if 'version' in head.attrib:
+                    version = head.attrib['version']
+        return version
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

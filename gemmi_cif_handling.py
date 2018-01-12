@@ -97,6 +97,8 @@ class mmcifHandling:
         #self.cif_categories.delete_category(category)
 
     def addToCif(self, data_dictionary):
+        logging.debug('addToCif')
+        logging.debug(data_dictionary)
         try:
             if data_dictionary:
                 for category in data_dictionary:

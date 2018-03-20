@@ -15,7 +15,7 @@ stats_remap = {
                     'pdbx_Rmerge_I_obs': 'Rmerge',
                     'pdbx_Rrim_I_all': 'Rmeas',
                     'pdbx_Rpim_I_all': 'Rpim',
-                    'number_measured_obs': 'NumberReflections',
+                    'number_obs': 'NumberReflections',
                     'pdbx_netI_over_sigmaI': 'MeanIoverSD',
                     'pdbx_CC_half': 'CChalf',
                     'percent_possible_obs': 'Completeness',

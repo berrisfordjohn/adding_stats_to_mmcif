@@ -11,3 +11,6 @@ class TestFiles:
         self.TEST_AIMLESS_XML_FILE_NO_DATA = os.path.join(self.test_data, "aimless_example_no_data.xml")
         self.TEST_BAD_XML_FILE = os.path.join(self.test_data, "bad_example.xml")
         self.TEST_NON_AIMLESS_XML_FILE = os.path.join(self.test_data, "non_aimless_example.xml")
+        self.TEST_INVALID_MMCIF_FILE = os.path.join(self.test_data, "invalid.cif")
+        self.TEST_VALID_MMCIF_FILE = os.path.join(self.test_data, "valid.cif")
+

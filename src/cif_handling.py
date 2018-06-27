@@ -2,7 +2,7 @@
 import logging
 import argparse
 
-from pdbe_cif_handling import mmcifHandling as pdbe_cif_handling
+#from pdbe_cif_handling import mmcifHandling as pdbe_cif_handling
 from gemmi_cif_handling import mmcifHandling as gemmi_cif_handling
 
 logger = logging.getLogger()
@@ -14,30 +14,26 @@ class mmcifHandling:
         self.cif_handling = gemmi_cif_handling(fileName=fileName, datablock=datablock, atom_site=atom_site)
 
     def parse_mmcif(self):
-        '''parse the mmcif and return a dictionary file'''
-        parsed_cif = self.cif_handling.parse_mmcif()
-        if parsed_cif:
-            return True
-        return False
+        """
+        parse the mmcif
+        return True if worked, False if failed
+        """
+        return self.cif_handling.parse_mmcif()
 
     def getDatablock(self):
-        self.cif_categories = self.cif_handling.getDatablock()
+        return self.cif_handling.getDatablock()
 
     def getCategoryObject(self, category):
-        category_1 = self.cif_handling.getCategory(category)
-        return category_1
+        return self.cif_handling.getCategory(category)
 
     def getCatItemValues(self, category, item):
-        values = self.cif_handling.getCatItemValues(category=category, item=item)
-        return values
+        return self.cif_handling.getCatItemValues(category=category, item=item)
 
     def getCategory(self, category):
-        mmcif_dictionary = self.cif_handling.getCategory(category=category)
-        return mmcif_dictionary
+        return self.cif_handling.getCategory(category=category)
 
     def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
-        mmcif_dictionary = self.cif_handling.addValuesToCategory(category=category, item_value_dictionary=item_value_dictionary, ordinal_item=ordinal_item)
-        return mmcif_dictionary
+        return self.cif_handling.addValuesToCategory(category=category, item_value_dictionary=item_value_dictionary, ordinal_item=ordinal_item)
 
     def removeCategory(self, category):
         self.cif_handling.removeCategory(category=category)

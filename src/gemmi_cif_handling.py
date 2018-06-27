@@ -20,18 +20,26 @@ class mmcifHandling:
     def parse_mmcif(self):
         '''parse the mmcif and return a dictionary file'''
         # from http://gemmi.readthedocs.io/en/latest/cif-parser.html#python-module
-        self.cifObj = cif.read_file(self.f)  # copy all the data from mmCIF file
-        if self.cifObj:
-            #self.getDataBlockWithMostCat()
-            self.getDataBlockWithAtomSite()
-            #self.getDatablock()
-            return True
+        if self.f and os.path.exists(self.f):
+            try:
+                self.cifObj = cif.read_file(self.f)  # copy all the data from mmCIF file
+                if self.cifObj:
+                    #self.getDataBlockWithMostCat()
+                    self.getDataBlockWithAtomSite()
+                    #self.getDatablock()
+                    return True
+            except Exception as e:
+                logging.error(e)
         return False
 
     def getDatablock(self):
         logging.debug('datablocks')
         logging.debug(self.cifObj)
-        self.cif_categories = self.cifObj[self.datablock]
+        try:
+            if self.datablock in self.cifObj:
+                self.cif_categories = self.cifObj[self.datablock]
+        except Exception as e:
+            logging.error(e)
 
     def getDataBlockWithMostCat(self):
         logging.debug('getDataBlockWithMostCat')

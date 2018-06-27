@@ -1,6 +1,6 @@
 import unittest
 
-from adding_stats_to_mmcif.tests import (test_xml_parsing, test_aimless_xml_report)
+from adding_stats_to_mmcif.tests import (test_xml_parsing, test_aimless_xml_report, test_cif_parsing)
 
 @unittest.skip("This is not a unittest")
 class TestSuite(unittest.TestCase):
@@ -15,6 +15,7 @@ class TestSuite(unittest.TestCase):
         Test_Suite = unittest.TestSuite()
         Test_Suite = loader.loadTestsFromModule(test_xml_parsing)
         Test_Suite.addTests(loader.loadTestsFromModule(test_aimless_xml_report))
+        Test_Suite.addTests(loader.loadTestsFromModule(test_cif_parsing))
         
         return Test_Suite 
 

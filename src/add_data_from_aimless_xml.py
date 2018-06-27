@@ -5,6 +5,8 @@ import argparse
 import logging
 
 logger = logging.getLogger()
+FORMAT = "%(filename)s - %(funcName)s - %(message)s"
+logging.basicConfig(format=FORMAT)
 
 
 def aimless_software_row(version=None):

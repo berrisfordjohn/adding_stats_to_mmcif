@@ -1,0 +1,15 @@
+# combined python modules
+*.pyc
+
+# ide temp files
+.idea/*
+__pycache__/*
+.vscode/*
+
+# python egg metadata
+/*.egg-info
+.eggs/*
+
+# test data
+test_data/*
+

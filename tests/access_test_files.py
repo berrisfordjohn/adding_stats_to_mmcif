@@ -1,0 +1,13 @@
+import os
+
+class TestFiles:
+
+    def __init__(self):
+
+        self.FILE_ROOT = os.path.dirname(os.path.realpath(__file__))
+        self.path = os.path.dirname(os.path.join(self.FILE_ROOT, '..', '..'))
+        self.test_data = os.path.join(self.path, 'test_data')
+        self.TEST_AIMLESS_XML_FILE = os.path.join(self.test_data, "aimless_example.xml")
+        self.TEST_AIMLESS_XML_FILE_NO_DATA = os.path.join(self.test_data, "aimless_example_no_data.xml")
+        self.TEST_BAD_XML_FILE = os.path.join(self.test_data, "bad_example.xml")
+        self.TEST_NON_AIMLESS_XML_FILE = os.path.join(self.test_data, "non_aimless_example.xml")

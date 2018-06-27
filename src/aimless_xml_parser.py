@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import xml.etree.ElementTree as ET
 import logging
 import pprint
 import os
 import argparse
+import xml_parsing
 
 logger = logging.getLogger()
 
@@ -56,13 +56,7 @@ class aimlessReport:
         :return: True if a parsed aimless XML file, False if not
         """
         if not self.tree:
-            try:
-                if os.path.exists(self.xml_file):
-                    self.tree = ET.parse(self.xml_file)
-                    self.root = self.tree.getroot()
-            except Exception as e:
-                logging.error(e)
-                return False
+            self.root = xml_parsing.parse_xml(xml_file=self.xml_file)
 
         if self.root is not None:
             if self.root.tag == 'AIMLESS_PIPE':
@@ -165,7 +159,7 @@ class aimlessReport:
         version = None
         is_aimless_file = self.parse_xml()
         if is_aimless_file:
-            header = self.root.findall(".//POINTLESS")
+            header = self.root.findall(".//AIMLESS")
             for head in header:
                 if 'version' in head.attrib:
                     version = head.attrib['version']

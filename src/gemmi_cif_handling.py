@@ -38,8 +38,10 @@ class mmcifHandling:
         try:
             if self.datablock in self.cifObj:
                 self.cif_categories = self.cifObj[self.datablock]
+                return True 
         except Exception as e:
             logging.error(e)
+        return False
 
     def getDataBlockWithMostCat(self):
         logging.debug('getDataBlockWithMostCat')

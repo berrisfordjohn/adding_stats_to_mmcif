@@ -113,6 +113,20 @@ class mmcifHandling:
 
         return mmcif_dictionary
 
+    def getCategoryList(self, category):
+        
+        mmcif_dictionary = self.getCategory(category=category)
+
+        mmcif_cat_list = list()
+        if category in mmcif_dictionary:
+            len_of_values = mmcif_dictionary[category][0].len()
+            mmcif_cat_list = [{} for i in range(1, len_of_values+1)]
+            for item in mmcif_dictionary[category]:
+                for position, value in enumerate(mmcif_dictionary[category][item]):
+                    mmcif_cat_list[position][item] = value
+
+        return mmcif_cat_list
+
     def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
         category = self.prepare_cat(category=category)
         current_values = self.getCategory(category=category)

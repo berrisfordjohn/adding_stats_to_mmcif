@@ -9,7 +9,7 @@ FORMAT = "%(filename)s - %(funcName)s - %(message)s"
 logging.basicConfig(format=FORMAT)
 
 
-def aimless_software_row(version=None):
+def aimless_software_row(version=''):
     software_row = {}
     software_row['name'] = 'Aimless'
     software_row['classification'] = 'data scaling'

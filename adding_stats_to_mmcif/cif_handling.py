@@ -3,7 +3,7 @@ import logging
 import argparse
 
 #from pdbe_cif_handling import mmcifHandling as pdbe_cif_handling
-from gemmi_cif_handling import mmcifHandling as gemmi_cif_handling
+from adding_stats_to_mmcif.adding_stats_to_mmcif.gemmi_cif_handling import mmcifHandling as gemmi_cif_handling
 
 logger = logging.getLogger()
 

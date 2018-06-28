@@ -1,8 +1,8 @@
 import unittest
 
-from tests.access_test_files import TestFiles
+from adding_stats_to_mmcif.tests.access_test_files import TestFiles
 
-from xml_parsing import parse_xml
+from adding_stats_to_mmcif.adding_stats_to_mmcif.xml_parsing import parse_xml
 
 class TestXmlParsing(unittest.TestCase):
 

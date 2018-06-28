@@ -1,7 +1,7 @@
 import unittest
 
-from tests.access_test_files import TestFiles
-from cif_handling import mmcifHandling
+from adding_stats_to_mmcif.tests.access_test_files import TestFiles
+from adding_stats_to_mmcif.adding_stats_to_mmcif.cif_handling import mmcifHandling
 
 class TestXmlParsing(unittest.TestCase):
 

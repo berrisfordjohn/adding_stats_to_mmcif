@@ -3,7 +3,7 @@ import logging
 import pprint
 import os
 import argparse
-import xml_parsing
+import adding_stats_to_mmcif.adding_stats_to_mmcif.xml_parsing as xml_parsing
 
 logger = logging.getLogger()
 

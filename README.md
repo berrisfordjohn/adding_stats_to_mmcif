@@ -9,8 +9,8 @@ typical usage
 
 ### INPUT: Aimless XML file, Any STAR/CIF/mmCIF file, OUTPUT: updated cifFile
 ```python
-import aimless_xml_parser
-import cif_handling
+import adding_stats_to_mmcif.aimless_xml_parser as aimless_xml_parser
+import adding_stats_to_mmcif.cif_handling as cif_handling
 
 xml_file = 'input.xml'
 input_mmcif = 'input.cif'

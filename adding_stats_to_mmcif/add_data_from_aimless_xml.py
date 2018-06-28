@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from aimless_xml_parser import aimlessReport
-from cif_handling import mmcifHandling
+from .aimless_xml_parser import aimlessReport
+from .cif_handling import mmcifHandling
 import argparse
 import logging
 

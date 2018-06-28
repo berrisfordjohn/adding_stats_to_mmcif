@@ -1,8 +1,8 @@
 import unittest
 import os
-from adding_stats_to_mmcif.tests.access_test_files import TestFiles
+from tests.access_test_files import TestFiles
 
-from adding_stats_to_mmcif.adding_stats_to_mmcif.aimless_xml_parser import aimlessReport
+from adding_stats_to_mmcif.aimless_xml_parser import aimlessReport
 
 class TestAimlessReportGeneration(unittest.TestCase):
 

@@ -3,7 +3,7 @@ import logging
 import pprint
 import os
 import argparse
-import adding_stats_to_mmcif.adding_stats_to_mmcif.xml_parsing as xml_parsing
+from .xml_parsing import parse_xml
 
 logger = logging.getLogger()
 
@@ -56,7 +56,7 @@ class aimlessReport:
         :return: True if a parsed aimless XML file, False if not
         """
         if not self.tree:
-            self.root = xml_parsing.parse_xml(xml_file=self.xml_file)
+            self.root = parse_xml(xml_file=self.xml_file)
 
         if self.root is not None:
             if self.root.tag == 'AIMLESS_PIPE':

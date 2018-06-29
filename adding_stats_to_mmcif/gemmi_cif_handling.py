@@ -115,14 +115,17 @@ class mmcifHandling:
 
     def getCategoryList(self, category):
         
-        mmcif_dictionary = self.getCategory(category=category)
+        self.prepare_cat(category=category)
+        mmcif_dictionary = self.getCategory(category=self.category)
+        logging.debug(mmcif_dictionary)
 
         mmcif_cat_list = list()
-        if category in mmcif_dictionary:
-            len_of_values = mmcif_dictionary[category][0].len()
+        if self.category in mmcif_dictionary:
+            first_key_in_mmcif_dict = list(mmcif_dictionary[self.category].keys())[0]
+            len_of_values = len(mmcif_dictionary[self.category][first_key_in_mmcif_dict])
             mmcif_cat_list = [{} for i in range(1, len_of_values+1)]
-            for item in mmcif_dictionary[category]:
-                for position, value in enumerate(mmcif_dictionary[category][item]):
+            for item in mmcif_dictionary[self.category]:
+                for position, value in enumerate(mmcif_dictionary[self.category][item]):
                     mmcif_cat_list[position][item] = value
 
         return mmcif_cat_list
@@ -143,9 +146,9 @@ class mmcifHandling:
                         current_values[category][mmcif_item].append('')
         else:
             for mmcif_item in item_value_dictionary:
-                current_values.setdefault(category)[mmcif_item] = [item_value_dictionary[mmcif_item]]
+                current_values.setdefault(category, {})[mmcif_item] = [item_value_dictionary[mmcif_item]]
                 if mmcif_item == ordinal_item:
-                    current_values.setdefault(category)[mmcif_item] = ['1']
+                    current_values.setdefault(category, {})[mmcif_item] = ['1']
 
         return current_values
 

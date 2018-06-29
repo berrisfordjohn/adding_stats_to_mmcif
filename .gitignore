@@ -13,3 +13,5 @@ __pycache__/*
 # test data
 test_data/*
 
+*.sqlite
+/out.cif

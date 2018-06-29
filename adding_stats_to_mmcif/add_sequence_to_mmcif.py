@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 from .cif_handling import mmcifHandling
+from pprint import pformat
 import argparse
 import logging
 from Bio import SeqIO, Align
@@ -107,7 +108,8 @@ class ExtractFromMmcif():
         self.mm.removeCategory(category=category)
 
     def add_to_mmcif(self, category, item_value_dict, ordinal=None):
-        self.mm.addValuesToCategory(category=category, item_value_dictionary=item_value_dict, ordinal_item=ordinal)
+        category_dict = self.mm.addValuesToCategory(category=category, item_value_dictionary=item_value_dict, ordinal_item=ordinal)
+        self.mm.addToCif(category_dict)
 
     def write_mmcif(self, filename):
         self.mm.writeCif(fileName=filename)
@@ -158,25 +160,29 @@ class AddSequenceToMmcif:
             if 'sequence' in self.mmcif_sequence_dict[entity_id]:
                 mmcif_sequence = self.mmcif_sequence_dict[entity_id]['sequence']
                 chain_ids = self.mmcif_sequence_dict[entity_id]['chains']
+                logging.debug(chain_ids)
                 for chain_id in chain_ids:
                     if chain_id in self.input_sequence_dict:
                         input_sequence = self.input_sequence_dict[chain_id]
-                        sa = SequenceAlign(sequence1=input_sequence, sequence2=mmcif_sequence)
-                        sa.pairwise2()
-                        sa.pairwise_aligner()
+                        #sa = SequenceAlign(sequence1=input_sequence, sequence2=mmcif_sequence)
+                        #sa.pairwise2()
+                        #sa.pairwise_aligner()
                         match = True
-                if match:
-                    mmcif_out.append({'entity_id': entity_id, 
-                                      'pdbx_seq_one_letter_code': input_sequence,
-                                      'pdbx_strand_id': ','.join(chain_ids)})
+                        mmcif_out.append({'entity_id': entity_id, 
+                                            'pdbx_seq_one_letter_code': input_sequence,
+                                            'pdbx_strand_id': ','.join(chain_ids)})
         if mmcif_out:
+            logging.debug('adding data to mmcif: {}'.format(mmcif_out))
             mmcif_dict = {'entity_poly': mmcif_out}
-            self.mmcif.remove_category(category='entity_poly')
+            #self.mmcif.remove_category(category='entity_poly')
             self.add_to_mmcif(mmcif_dict=mmcif_dict)
             self.mmcif.write_mmcif(filename=self.output_cif)
+        else:
+            logging.debug('no sequence to add to mmcif')
 
 
     def add_to_mmcif(self, mmcif_dict):
+        logging.debug(mmcif_dict)
         for cat in mmcif_dict:
             for row in mmcif_dict[cat]:
                 logging.debug(row)

@@ -166,7 +166,7 @@ class mmcifHandling:
                 for category in data_dictionary:
                     values = data_dictionary[category]
                     category = self.prepare_cat(category=category)
-                    self.removeCategory(category=category)
+                    #self.removeCategory(category=category)
                     self.cif_categories.set_mmcif_category(category, values)
             return True
         except Exception as e:
@@ -174,6 +174,7 @@ class mmcifHandling:
         return False
 
     def writeCif(self, fileName):
+        logging.debug('writing out to {}'.format(fileName))
         self.cifObj.write_file(fileName)
 
 

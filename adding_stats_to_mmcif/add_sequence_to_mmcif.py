@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 import os
 from .cif_handling import mmcifHandling
+from Bio import SeqIO
 from pprint import pformat
 import argparse
 import logging
-from Bio import SeqIO, Align
-from Bio import pairwise2
-from Bio.SubsMat import MatrixInfo as matlist
+from pairwise_align import SequenceAlign
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
@@ -26,35 +25,7 @@ residue_map_3to1['C'] = 'C'
 residue_map_3to1['T'] = 'T'
 residue_map_3to1['U'] = 'U'
 
-class SequenceAlign():
 
-    def __init__(self, sequence1, sequence2):
-        self.sequence1 = sequence1
-        self.sequence2 = sequence2
-        self.score = None
-        logging.info(self.sequence1)
-        logging.info(self.sequence2)
-
-
-    def pairwise2(self):
-        
-        matrix = matlist.blosum62
-        gap_open = -10
-        gap_extend = -0.5
-        alns = pairwise2.align.globalds(self.sequence1, self.sequence2, matrix, gap_open, gap_extend)
-        logging.info(alns)
-        self.score = alns
-
-    def pairwise_aligner(self):
-
-        aligner = Align.PairwiseAligner()
-        align_score = aligner.score(self.sequence1, self.sequence2)
-        logging.info(align_score)
-
-        self.score = align_score
-
-    def get_alignment_score(self):
-        return self.score
 
 class ExtractFromMmcif():
 

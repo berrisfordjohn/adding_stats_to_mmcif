@@ -66,7 +66,7 @@ class mmcifHandling:
             logging.debug(datablock)
             cif_categories = self.cifObj[position]
             atom_site = cif_categories.find_values('_atom_site.id')
-            logging.debug(atom_site)
+            #logging.debug(atom_site)
             if atom_site:
                 datablockToGet = position
         logging.debug('datablock with atom_site cat: %s' % datablockToGet)
@@ -117,7 +117,7 @@ class mmcifHandling:
         
         self.prepare_cat(category=category)
         mmcif_dictionary = self.getCategory(category=self.category)
-        logging.debug(mmcif_dictionary)
+        #logging.debug(mmcif_dictionary)
 
         mmcif_cat_list = list()
         if self.category in mmcif_dictionary:

@@ -5,7 +5,7 @@ from Bio import SeqIO
 from pprint import pformat
 import argparse
 import logging
-from pairwise_align import SequenceAlign
+from .pairwise_align import SequenceAlign
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
@@ -37,7 +37,7 @@ class ExtractFromMmcif():
     def get_sequence_dict(self):
         self.mm.parse_mmcif()
         self.get_seq_of_polymer_entities()
-        self.get_chain_id_per_entity()
+        self.get_data_from_atom_site()
         return self.sequence_dict
 
     def parse_mmcif(self):
@@ -47,7 +47,7 @@ class ExtractFromMmcif():
         internal_dict = dict()
         if self.mm:
             row_list = self.mm.getCategoryList('entity_poly_seq')
-            logging.debug(row_list)
+            #logging.debug(row_list)
             for row in row_list:
                 entity_id = row['entity_id']
                 threeLetter = row['mon_id']
@@ -64,16 +64,46 @@ class ExtractFromMmcif():
         for entity_id in internal_dict:
             sequence_list = internal_dict[entity_id]
             sequence = ''.join(sequence_list)
-            self.sequence_dict.setdefault(entity_id, {})['sequence'] = sequence
+            if sequence:
+                self.sequence_dict.setdefault(entity_id, {})['sequence'] = sequence
 
-    def get_chain_id_per_entity(self):
+    def get_data_from_atom_site(self):
+        atom_site_dict = dict()
+        sequence_dict = dict()
         if self.mm:
             row_list = self.mm.getCategoryList('atom_site')
             for row in row_list:
                 entity_id = row['label_entity_id']
                 chain_id = row['auth_asym_id']
+                threeLetter = row['auth_comp_id']
+                residue_number = row['auth_seq_id']
+                ins_code = row['pdbx_PDB_ins_code']
+                group_PDB = row['group_PDB']
+
+                if threeLetter in residue_map_3to1:
+                    oneLetter = residue_map_3to1[threeLetter]
+                else:
+                    oneLetter = 'X'
+
+                # TODO is this right? Can this be relied upon?
+                if group_PDB == 'ATOM':
+                    #logging.debug('{} {}{} {}'.format(entity_id, chain_id, residue_number, oneLetter))
+                    atom_site_dict.setdefault(entity_id, {}).setdefault(chain_id, [])
+                    if residue_number not in atom_site_dict[entity_id][chain_id]:
+                        #logging.debug('new residue')
+                        sequence_dict.setdefault(entity_id, {}).setdefault(chain_id, []).append(oneLetter)
+                        atom_site_dict[entity_id][chain_id].append(residue_number)
+
+        logging.debug('atom site dict: {}'.format(atom_site_dict))
+        logging.debug('sequence dict: {}'.format(sequence_dict))
+        for entity_id in sequence_dict:
+            for chain_id in sequence_dict[entity_id]:
                 if chain_id not in self.sequence_dict.setdefault(entity_id, {}).setdefault('chains', []):
                     self.sequence_dict.setdefault(entity_id, {}).setdefault('chains', []).append(chain_id)
+                if 'sequence' not in self.sequence_dict[entity_id]:
+                    oneLetterSequence = ''.join(sequence_dict[entity_id][chain_id])
+                    self.sequence_dict[entity_id]['sequence'] = oneLetterSequence
+                
 
     def remove_category(self, category):
         self.mm.removeCategory(category=category)
@@ -101,6 +131,7 @@ class AddSequenceToMmcif:
 
     def process_fasta(self):
         if self.fasta_file:
+            logging.debug('fasta file: {}'.format(self.fasta_file))
             if os.path.exists(self.fasta_file):
                 logging.debug('processing fasta file')
                 self.fasta_data = SeqIO.to_dict(SeqIO.parse(self.fasta_file, "fasta"))
@@ -122,26 +153,38 @@ class AddSequenceToMmcif:
             self.mmcif_sequence_dict = self.mmcif.get_sequence_dict()
         logging.debug(self.mmcif_sequence_dict)
 
+    def get_best_match(self, mmcif_sequence):
+        best_score = 0
+        best_seq = None
+        for seq in self.input_sequence_dict:
+            test_sequence = self.input_sequence_dict[seq]
+            if len(test_sequence) >= len(mmcif_sequence):
+                sa = SequenceAlign(sequence1=mmcif_sequence, sequence2=test_sequence)
+                aligned, error, score = sa.do_sequence_alignment()
+                if aligned:
+                    if score > best_score:
+                        best_seq = test_sequence
+                        score = best_score
+        return best_seq, best_score
+        
+
     def match_sequences(self):
         mmcif_out = []
-        logging.debug(self.mmcif_sequence_dict)
-        logging.debug(self.input_sequence_dict)
+        logging.debug('mmcif sequences: {}'.format(self.mmcif_sequence_dict))
+        logging.debug('input sequences: {}'.format(self.input_sequence_dict))
         for entity_id in self.mmcif_sequence_dict:
-            match = False
             if 'sequence' in self.mmcif_sequence_dict[entity_id]:
                 mmcif_sequence = self.mmcif_sequence_dict[entity_id]['sequence']
                 chain_ids = self.mmcif_sequence_dict[entity_id]['chains']
                 logging.debug(chain_ids)
-                for chain_id in chain_ids:
-                    if chain_id in self.input_sequence_dict:
-                        input_sequence = self.input_sequence_dict[chain_id]
-                        #sa = SequenceAlign(sequence1=input_sequence, sequence2=mmcif_sequence)
-                        #sa.pairwise2()
-                        #sa.pairwise_aligner()
-                        match = True
-                        mmcif_out.append({'entity_id': entity_id, 
-                                            'pdbx_seq_one_letter_code': input_sequence,
-                                            'pdbx_strand_id': ','.join(chain_ids)})
+
+                matched_sequence, matched_score = self.get_best_match(mmcif_sequence=mmcif_sequence)
+                if matched_sequence:
+                    mmcif_out.append({'entity_id': entity_id, 
+                                    'pdbx_seq_one_letter_code': matched_sequence,
+                                    'pdbx_strand_id': ','.join(chain_ids)})
+
+
         if mmcif_out:
             logging.debug('adding data to mmcif: {}'.format(mmcif_out))
             mmcif_dict = {'entity_poly': mmcif_out}
@@ -183,7 +226,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_mmcif', help='output mmcif file', type=str, required=True)
     parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)
     parser.add_argument('--fasta_file', help='input fasta file', type=str)
-    parser.add_argument('--sequence', help='input sequence in letter format', type=str)
+    parser.add_argument('--sequence', help='input sequence in one letter format', type=str)
     parser.add_argument('--chain_ids', help='input chain ids in a comma separated list', type=str)
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,
                         default=logging.INFO)

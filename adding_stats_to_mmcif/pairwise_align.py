@@ -38,8 +38,8 @@ class SequenceAlign():
             return False, 'sequences not the same type'
         return True, ''
 
-    def remove_gaps(self, seq):
-        return seq.replace("\n", "").replace(" ", "").upper()
+    def remove_gaps(self, sequence):
+        return sequence.replace("\n", "").replace(" ", "")
 
     def prepare_sequences(self):
         self.sequence1 = self.remove_gaps(self.sequence1)
@@ -67,7 +67,7 @@ class SequenceAlign():
         aligner.query_end_gap_score = 0.0
         alignments = aligner.align(self.sequence1, self.sequence2)
         for alignment in sorted(alignments):
-            print(alignment)
+            logging.debug(alignment)
         align_score = aligner.score(self.sequence1, self.sequence2)
         logging.info(align_score)
 
@@ -96,11 +96,11 @@ class SequenceAlign():
     def do_sequence_alignment(self):
         sequences_ok, error = self.prepare_sequences()
         if not sequences_ok:
-            return False, error
+            return False, error, 0
         self.pairwise_aligner()
         if self.do_sequences_align():
-            return True, ''
-        return False, 'sequences do not align'
+            return True, '', self.score
+        return False, 'sequences do not align', 0
 
 if __name__ == '__main__':
 
@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
     for sequence in test_sequences:
         sa = SequenceAlign(sequence1=test_sequences[0], sequence2=sequence)
-        aligned, error = sa.do_sequence_alignment()
+        aligned, error, score = sa.do_sequence_alignment()
         logging.info('is aligned: {}'.format(aligned))
         logging.info('error: "{}"'.format(error))
-        logging.info('score: {}'.format(sa.get_alignment_score()))
+        logging.info('score: {}'.format(score))

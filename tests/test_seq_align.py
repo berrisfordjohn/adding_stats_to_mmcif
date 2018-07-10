@@ -19,33 +19,33 @@ class TestSeqAlign(unittest.TestCase):
     def test_align_complete(self):
         for sequence in short_test_sequences:
             sa = SequenceAlign(sequence1=sequence, sequence2=sequence)
-            aligned, error = sa.do_sequence_alignment()
+            aligned, error, score = sa.do_sequence_alignment()
             self.assertTrue(aligned)
 
     def test_align_subset(self):
         for sequence in short_test_sequences:
             for seq_range in (slice(20), slice(50), slice(100), slice(150), slice(200), slice(250)):
                 sa = SequenceAlign(sequence1=sequence, sequence2=sequence[seq_range])
-                aligned, error = sa.do_sequence_alignment()
+                aligned, error, score = sa.do_sequence_alignment()
                 self.assertTrue(aligned)
 
     def test_align_misalign(self):
         for sequence in short_test_sequences:
             for seq_range in (slice(10), slice(20), slice(50), slice(100), slice(150), slice(200), slice(250)):
                 sa = SequenceAlign(sequence1=sequence[seq_range], sequence2=no_match)
-                aligned, error = sa.do_sequence_alignment()
+                aligned, error, score = sa.do_sequence_alignment()
                 self.assertFalse(aligned)
         
     def test_align_changing_length_to_2000(self):
         for seq_range in (slice(500), slice(1000), slice(1500), slice(2000), slice(2000)):
             sa = SequenceAlign(sequence1=test_sequences[2][seq_range], sequence2=test_sequences[2][20:200])
-            aligned, error = sa.do_sequence_alignment()
+            aligned, error, score = sa.do_sequence_alignment()
             self.assertTrue(aligned)
 
     def test_align_changing_length_over_2500(self):
         for seq_range in (slice(2500), slice(3000), slice(3500), slice(4000), slice(4500)):
             sa = SequenceAlign(sequence1=test_sequences[2][seq_range], sequence2=test_sequences[2][20:200])
-            aligned, error = sa.do_sequence_alignment()
+            aligned, error, score = sa.do_sequence_alignment()
             self.assertTrue(aligned)
 
 

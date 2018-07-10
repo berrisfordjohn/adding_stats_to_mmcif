@@ -39,13 +39,13 @@ class SequenceAlign():
         return True, ''
 
     def remove_gaps(self, seq):
-        return seq.replace("\n", "").replace(" ", "")
+        return seq.replace("\n", "").replace(" ", "").upper()
 
     def prepare_sequences(self):
         self.sequence1 = self.remove_gaps(self.sequence1)
         self.sequence2 = self.remove_gaps(self.sequence2)
-        if len(self.sequence1) > 2000 or len(self.sequence2) > 2000:
-            return False, 'sequences too long. Please install emboss needle'
+        #if len(self.sequence1) > 2000 or len(self.sequence2) > 2000:
+        #    return False, 'sequences too long. Please install emboss needle'
         return self.both_sequences_same_type()
 
     def pairwise2(self):
@@ -61,6 +61,13 @@ class SequenceAlign():
     def pairwise_aligner(self):
 
         aligner = Align.PairwiseAligner()
+        aligner.open_gap_score = -10
+        aligner.extend_gap_score = -0.5
+        aligner.target_end_gap_score = 0.0
+        aligner.query_end_gap_score = 0.0
+        alignments = aligner.align(self.sequence1, self.sequence2)
+        for alignment in sorted(alignments):
+            print(alignment)
         align_score = aligner.score(self.sequence1, self.sequence2)
         logging.info(align_score)
 
@@ -90,7 +97,7 @@ class SequenceAlign():
         sequences_ok, error = self.prepare_sequences()
         if not sequences_ok:
             return False, error
-        self.pairwise2()
+        self.pairwise_aligner()
         if self.do_sequences_align():
             return True, ''
         return False, 'sequences do not align'
@@ -105,10 +112,11 @@ if __name__ == '__main__':
 
     test_sequences = ['MEKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR',
                 'TRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGE',
-                'DMEGYFVDE']
+                'DMEGYFVDE', 'RANDOM']
 
     for sequence in test_sequences:
         sa = SequenceAlign(sequence1=test_sequences[0], sequence2=sequence)
         aligned, error = sa.do_sequence_alignment()
         logging.info('is aligned: {}'.format(aligned))
         logging.info('error: "{}"'.format(error))
+        logging.info('score: {}'.format(sa.get_alignment_score()))

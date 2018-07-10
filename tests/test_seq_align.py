@@ -46,23 +46,8 @@ class TestSeqAlign(unittest.TestCase):
         for seq_range in (slice(2500), slice(3000), slice(3500), slice(4000), slice(4500)):
             sa = SequenceAlign(sequence1=test_sequences[2][seq_range], sequence2=test_sequences[2][20:200])
             aligned, error = sa.do_sequence_alignment()
-            self.assertFalse(aligned)
+            self.assertTrue(aligned)
 
-    """
-    def test_align_pairwise2_complete(self):
-        for sequence in test_sequences:
-            sa = SequenceAlign(sequence1=sequence, sequence2=sequence)
-            sa.pairwise2()
-            s = sa.do_sequences_align()
-            self.assertTrue(s)
-
-    def test_align_pairwise2_subset(self):
-        for sequence in test_sequences:
-            sa = SequenceAlign(sequence1=sequence, sequence2=sequence[20:200])
-            sa.pairwise2()
-            s = sa.do_sequences_align()
-            self.assertTrue(s)
-    """
 
     def test_align_pairwise2_changing_length_to_2000(self):
         for seq_range in (slice(500), slice(1000), slice(1500), slice(2000), slice(2000)):
@@ -92,17 +77,23 @@ class TestSeqAlign(unittest.TestCase):
             s = sa.do_sequences_align()
             self.assertFalse(s)
 
-    """
-    def test_align_pairwise_aligner_complete(self):
-        for sequence in test_sequences:
-            sa = SequenceAlign(sequence1=sequence, sequence2=sequence)
+    def test_align_pairwise_aligner_changing_length_to_5000(self):
+        for seq_range in (slice(500), slice(1000), slice(1500), slice(2000), slice(2000), slice(2500), slice(3000), slice(3500), slice(4000), slice(4500), slice(5000)):
+            sa = SequenceAlign(sequence1=test_sequences[2][seq_range], sequence2=test_sequences[2][20:200])
             sa.pairwise_aligner()
             s = sa.do_sequences_align()
             self.assertTrue(s)
 
-    def test_align_pairwise_aligner_subset(self):
-        for sequence in test_sequences:
-            sa = SequenceAlign(sequence1=sequence, sequence2=sequence[20:200])
+    def test_align_pairwise_aligner_nucleotide_changing_length_to_5000(self):
+        for seq_range in (slice(500), slice(1000), slice(1500), slice(2000), slice(2000), slice(2500), slice(3000), slice(3500), slice(4000), slice(4500), slice(5000)):
+            sa = SequenceAlign(sequence1=test_sequences[1][seq_range], sequence2=test_sequences[1][20:200])
+            sa.pairwise_aligner()
+            s = sa.do_sequences_align()
+            self.assertTrue(s)
+
+    def test_align_pairwise_aligner_changing_slice(self):
+        for seq_range in (slice(20), slice(50), slice(100), slice(150), slice(200), slice(250)):
+            sa = SequenceAlign(sequence1=short_test_sequences[0], sequence2=short_test_sequences[0][seq_range])
             sa.pairwise_aligner()
             s = sa.do_sequences_align()
             self.assertTrue(s)
@@ -113,7 +104,7 @@ class TestSeqAlign(unittest.TestCase):
             sa.pairwise_aligner()
             s = sa.do_sequences_align()
             self.assertFalse(s)
-    """
+
 
 
 if __name__ == '__main__':

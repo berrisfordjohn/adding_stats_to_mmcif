@@ -36,6 +36,17 @@ class TestSeqAlign(unittest.TestCase):
                 aligned, error = sa.do_sequence_alignment()
                 self.assertFalse(aligned)
         
+    def test_align_changing_length_to_2000(self):
+        for seq_range in (slice(500), slice(1000), slice(1500), slice(2000), slice(2000)):
+            sa = SequenceAlign(sequence1=test_sequences[2][seq_range], sequence2=test_sequences[2][20:200])
+            aligned, error = sa.do_sequence_alignment()
+            self.assertTrue(aligned)
+
+    def test_align_changing_length_over_2500(self):
+        for seq_range in (slice(2500), slice(3000), slice(3500), slice(4000), slice(4500)):
+            sa = SequenceAlign(sequence1=test_sequences[2][seq_range], sequence2=test_sequences[2][20:200])
+            aligned, error = sa.do_sequence_alignment()
+            self.assertFalse(aligned)
 
     """
     def test_align_pairwise2_complete(self):

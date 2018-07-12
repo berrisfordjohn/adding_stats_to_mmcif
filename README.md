@@ -28,3 +28,5 @@ where
 xml_file is an aimless XML file
 input_cif is an existing mmCIF file
 output_cif is the output modified mmCIF file which data from the aimless XML file.
+
+[![Build Status](https://travis-ci.org/berrisfordjohn/adding_stats_to_mmcif.svg?branch=master)](https://travis-ci.org/berrisfordjohn/adding_stats_to_mmcif)

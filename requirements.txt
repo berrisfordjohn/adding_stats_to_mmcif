@@ -1,2 +1,2 @@
-biopython
-git+git://github.com/project-gemmi/gemmi/tarball/master#egg=gemmi
+#biopython
+#git+git://github.com/project-gemmi/gemmi/tarball/master#egg=gemmi

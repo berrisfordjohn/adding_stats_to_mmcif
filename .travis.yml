@@ -2,5 +2,9 @@ language: python
 python:
   - "3.5"
   - "3.6"
+install:
+  - pip install --upgrade pip setuptools
+  - pip install git+git://github.com:project-gemmi/gemmi.git
+
 # Command to run tests
 script: python setup.py test

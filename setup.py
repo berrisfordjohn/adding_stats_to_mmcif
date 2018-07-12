@@ -10,6 +10,6 @@ setup(
     test_suite = 'tests',
     zip_safe=True,
     packages=find_packages('adding_stats_to_mmcif'),
-    #dependency_links=['https://github.com/project-gemmi/gemmi.git']
-    #install_requires=['unittest', 'logging', 'xml', 'os'], 
+    dependency_links=['https://github.com/project-gemmi/gemmi/tarball/master#egg=gemmi'],
+    install_requires=['biopython'], 
 )

@@ -1,0 +1,10 @@
+<AIMLESS_PIPE>
+<POINTLESS version="1.10.12" RunTime="Tue Oct  6 12:00:09 2015">
+    <cell>
+        <a>  34.150</a> <b>  54.810</b> <c>  68.000</c>
+        <alpha>  90.000</alpha> <beta>  90.000</beta> <gamma>  90.000</gamma>
+    </cell>
+</POINTLESS>
+<AIMLESS version="0.5.16" RunTime="Tue Oct  6 12:00:11 2015">
+</AIMLESS>
+</AIMLESS_PIPE>

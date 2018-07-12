@@ -1,0 +1,7 @@
+# 
+loop_
+_database_2.database_id 
+_database_2.database_code 
+PDB   3ZT9         
+PDBE  EBI-48923    
+WWPDB D_1290048923 sdfsdfsdf

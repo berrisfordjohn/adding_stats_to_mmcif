@@ -1,0 +1,61 @@
+<AIMLESS_PIPE>
+    <POINTLESS version="1.10.12" RunTime="Tue Oct  6 12:00:09 2015">
+        <cell>
+            <a>  34.150</a> <b>  54.810</b> <c>  68.000</c>
+            <alpha>  90.000</alpha> <beta>  90.000</beta> <gamma>  90.000</gamma>
+        </cell>
+    </POINTLESS>
+    <AIMLESS version="0.5.16" RunTime="Tue Oct  6 12:00:11 2015">
+        <Result>
+            <Dataset name="I2demo/Xe/Xe">
+                <ResolutionLow><Overall>   34.00</Overall><Inner>   34.00</Inner><Outer>    1.82</Outer></ResolutionLow>
+                <ResolutionHigh><Overall>    1.78</Overall><Inner>    9.08</Inner><Outer>    1.78</Outer></ResolutionHigh>
+                <Rmerge><Overall>   0.036</Overall><Inner>   0.050</Inner><Outer>   0.233</Outer></Rmerge>
+                <RmergeOverall><Overall>   0.053</Overall><Inner>   0.076</Inner><Outer>   0.268</Outer></RmergeOverall>
+                <Rmeas><Overall>   0.048</Overall><Inner>   0.069</Inner><Outer>   0.310</Outer></Rmeas>
+                <RmeasOverall><Overall>   0.062</Overall><Inner>   0.093</Inner><Outer>   0.316</Outer></RmeasOverall>
+                <Rpim><Overall>   0.032</Overall><Inner>   0.047</Inner><Outer>   0.203</Outer></Rpim>
+                <RpimOverall><Overall>   0.031</Overall><Inner>   0.053</Inner><Outer>   0.163</Outer></RpimOverall>
+                <RmergeTopI>   0.021</RmergeTopI>
+                <NumberObservations><Overall>    44984</Overall><Inner>      300</Inner><Outer>     1336</Outer></NumberObservations>
+                <NumberReflections><Overall>    12214</Overall><Inner>      108</Inner><Outer>      411</Outer></NumberReflections>
+                <MeanIoverSD><Overall>   18.9</Overall><Inner>   33.7</Inner><Outer>    3.9</Outer></MeanIoverSD>
+                <CChalf><Overall> 0.998</Overall><Inner> 0.969</Inner><Outer> 0.876</Outer></CChalf>
+                <Completeness><Overall>  95.8</Overall><Inner>  88.3</Inner><Outer>  57.6</Outer></Completeness>
+                <Multiplicity><Overall>     3.7</Overall><Inner>     2.8</Inner><Outer>     3.3</Outer></Multiplicity>
+                <AnomalousCompleteness><Overall>  89.4</Overall><Inner>  91.1</Inner><Outer>  46.7</Outer></AnomalousCompleteness>
+                <AnomalousMultiplicity><Overall>     1.9</Overall><Inner>     2.0</Inner><Outer>     1.9</Outer></AnomalousMultiplicity>
+                <AnomalousCChalf><Overall>   0.546</Overall><Inner>   0.653</Inner><Outer>   0.072</Outer></AnomalousCChalf>
+                <AnomalousNPslope>   1.305</AnomalousNPslope>
+                <AnomalousLimitEstimate type="CCanom"><Direction>Overall</Direction><Threshold> 0.15</Threshold><MaximumResolution> 1.94</MaximumResolution>
+                </AnomalousLimitEstimate>
+                <ResolutionLimitEstimate type="CChalf"><Direction>Overall</Direction><Threshold> 0.30</Threshold><MaximumResolution> 1.78</MaximumResolution>
+                <Message> == maximum resolution</Message></ResolutionLimitEstimate>
+                <ResolutionLimitEstimate type="I/sd"><Direction>Overall</Direction><Threshold> 1.50</Threshold><MaximumResolution> 1.78</MaximumResolution>
+                <Message> == maximum resolution</Message></ResolutionLimitEstimate>
+                <ResolutionLimitEstimate type="CChalf"><Direction>h axis</Direction><Threshold> 0.30</Threshold><MaximumResolution> 1.78</MaximumResolution>
+                <Message> == maximum resolution</Message></ResolutionLimitEstimate>
+                <ResolutionLimitEstimate type="I/sd"><Direction>h axis</Direction><Threshold> 1.50</Threshold><MaximumResolution> 1.78</MaximumResolution>
+                <Message> == maximum resolution</Message></ResolutionLimitEstimate>
+                <ResolutionLimitEstimate type="CChalf"><Direction>k axis</Direction><Threshold> 0.30</Threshold><MaximumResolution> 1.78</MaximumResolution>
+                <Message> == maximum resolution</Message></ResolutionLimitEstimate>
+                <ResolutionLimitEstimate type="I/sd"><Direction>k axis</Direction><Threshold> 1.50</Threshold><MaximumResolution> 1.78</MaximumResolution>
+                <Message> == maximum resolution</Message></ResolutionLimitEstimate>
+                <ResolutionLimitEstimate type="CChalf"><Direction>l axis</Direction><Threshold> 0.30</Threshold><MaximumResolution> 1.78</MaximumResolution>
+                <Message> == maximum resolution</Message></ResolutionLimitEstimate>
+                <ResolutionLimitEstimate type="I/sd"><Direction>l axis</Direction><Threshold> 1.50</Threshold><MaximumResolution> 1.78</MaximumResolution>
+                <Message> == maximum resolution</Message></ResolutionLimitEstimate>
+                <cell>
+                <a>  34.150</a> <b>  54.810</b> <c>  68.000</c>
+                <alpha>  90.000</alpha> <beta>  90.000</beta> <gamma>  90.000</gamma>
+                </cell>
+                <SpacegroupName>P 21 21 21</SpacegroupName>
+                <Mosaicity>  0.97</Mosaicity>
+                <MinimumSDcorrectionFulls>  2.33</MinimumSDcorrectionFulls>
+                <MaximumSDcorrectionFulls> 31.02</MaximumSDcorrectionFulls>
+                <MinimumSDcorrectionPartials>  0.71</MinimumSDcorrectionPartials>
+                <MaximumSDcorrectionPartials> 59.16</MaximumSDcorrectionPartials>
+            </Dataset>
+        </Result>
+    </AIMLESS>
+</AIMLESS_PIPE>

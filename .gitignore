@@ -11,7 +11,7 @@ __pycache__/*
 .eggs/*
 
 # test data
-ignore_test_data/*
+ignore_*
 
 
 *.sqlite

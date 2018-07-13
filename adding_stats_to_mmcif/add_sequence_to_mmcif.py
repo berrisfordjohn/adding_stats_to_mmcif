@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 from .cif_handling import mmcifHandling
-from Bio import SeqIO
+from .process_fasta import processFasta
 from pprint import pformat
 import argparse
 import logging
@@ -131,13 +131,9 @@ class AddSequenceToMmcif:
 
     def process_fasta(self):
         if self.fasta_file:
-            logging.debug('fasta file: {}'.format(self.fasta_file))
-            if os.path.exists(self.fasta_file):
-                logging.debug('processing fasta file')
-                self.fasta_data = SeqIO.to_dict(SeqIO.parse(self.fasta_file, "fasta"))
-                for key in self.fasta_data:
-                    self.input_sequence_dict[key] = self.fasta_data[key]
-
+            pf = processFasta(fasta_file=self.fasta_file)
+            pf.process_fasta_file()
+            self.input_sequence_dict = pf.get_sequence_dict()
             
     def process_sequence(self):
         if self.input_sequence and self.input_chain_ids:

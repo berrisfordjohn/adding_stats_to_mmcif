@@ -65,9 +65,12 @@ class SequenceAlign():
         aligner.extend_gap_score = -0.5
         aligner.target_end_gap_score = 0.0
         aligner.query_end_gap_score = 0.0
-        alignments = aligner.align(self.sequence1, self.sequence2)
-        for alignment in sorted(alignments):
-            logging.debug(alignment)
+        #aligner.match = 2
+        #aligner.mismatch = -1
+        # only need to run aligner.score. This improves memory usage and speed. 
+        #alignments = aligner.align(self.sequence1, self.sequence2)
+        #for alignment in sorted(alignments):
+        #    logging.debug(alignment)
         align_score = aligner.score(self.sequence1, self.sequence2)
         logging.info(align_score)
 

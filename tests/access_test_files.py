@@ -14,5 +14,6 @@ class TestFiles:
         self.TEST_INVALID_MMCIF_FILE = os.path.join(self.test_data, "invalid.cif")
         self.TEST_VALID_MMCIF_FILE = os.path.join(self.test_data, "valid.cif")
         self.TEST_VALID_FASTA_ONE_SEQUENCE = os.path.join(self.test_data, "one_chain.fasta")
+        self.TEST_VALID_FASTA_THREE_SEQUENCES = os.path.join(self.test_data, "three_chain.fasta")
         self.TEST_INVALID_FASTA_ONE_SEQUENCE = os.path.join(self.test_data, "invalid.fasta")
 

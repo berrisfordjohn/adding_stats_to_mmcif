@@ -20,9 +20,9 @@ class processFasta:
             logging.debug('fasta file: {}'.format(self.fasta_file))
             if os.path.exists(self.fasta_file):
                 logging.debug('processing fasta file')
-                self.fasta_data = SeqIO.to_dict(SeqIO.parse(self.fasta_file, "fasta"))
-                for key in self.fasta_data:
-                    self.sequence_dict[key] = self.fasta_data[key]
+                self.fasta_data = SeqIO.parse(self.fasta_file, "fasta")
+                for record in self.fasta_data:
+                    self.sequence_dict[record.id] = record.seq
 
     def get_sequence_dict(self):
         return self.sequence_dict

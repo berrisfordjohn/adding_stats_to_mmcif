@@ -13,6 +13,8 @@ short_test_sequences = ['MEKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIA
                         'PSVYDAAAQLTADVKKDLRDSWKVIGSDKKGNGVALMTTLFADNQETIGYFKRLGDVSQGMANDKLRGHSIILMYALQNFIDQLDNPDDLVCVVEKFAVNHITRKISAAEFGKINGPIKKVLASKNFGDKYANAWAKLVAVVQAAL',
                         'PSVYDAAAQLTADVKKDLRDSWKVIGSDKKGNGVALMTTLFADNQETIGYFKRLGDVSQGMANDKLRGHSIILMYALXXXDQLDNPDDLVCVVEKFAVNHITRKISAAEFGKINGPIKKVLASKNFGDKYANAWAKLVAVVQAAL']
 
+protein_DNA_RNA = ['MEKLEVGIYTRAREGEIACGDA', 'GATCTAGCTAGC', 'UACGUACG']
+
 class TestSeqAlign(unittest.TestCase):
 
 
@@ -104,6 +106,42 @@ class TestSeqAlign(unittest.TestCase):
             sa.pairwise_aligner()
             s = sa.do_sequences_align()
             self.assertFalse(s)
+
+    def test_align_protein_protein(self):
+        
+        sa = SequenceAlign(sequence1=protein_DNA_RNA[0], sequence2=protein_DNA_RNA[0])
+        aligned, error, score = sa.do_sequence_alignment()
+        self.assertTrue(aligned)
+
+    def test_align_dna_dna(self):
+        
+        sa = SequenceAlign(sequence1=protein_DNA_RNA[1], sequence2=protein_DNA_RNA[1])
+        aligned, error, score = sa.do_sequence_alignment()
+        self.assertTrue(aligned)
+
+    def test_align_rna_rna(self):
+        
+        sa = SequenceAlign(sequence1=protein_DNA_RNA[2], sequence2=protein_DNA_RNA[2])
+        aligned, error, score = sa.do_sequence_alignment()
+        self.assertTrue(aligned)
+
+    def test_align_protein_dna(self):
+        
+        sa = SequenceAlign(sequence1=protein_DNA_RNA[0], sequence2=protein_DNA_RNA[1])
+        aligned, error, score = sa.do_sequence_alignment()
+        self.assertFalse(aligned)
+
+    def test_align_protein_rna(self):
+        
+        sa = SequenceAlign(sequence1=protein_DNA_RNA[0], sequence2=protein_DNA_RNA[2])
+        aligned, error, score = sa.do_sequence_alignment()
+        self.assertFalse(aligned)
+
+    def test_align_dna_rna(self):
+        
+        sa = SequenceAlign(sequence1=protein_DNA_RNA[1], sequence2=protein_DNA_RNA[2])
+        aligned, error, score = sa.do_sequence_alignment()
+        self.assertFalse(aligned)
 
 
 

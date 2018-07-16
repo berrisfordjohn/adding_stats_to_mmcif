@@ -29,13 +29,22 @@ class SequenceAlign():
         logging.debug(self.sequence1)
         logging.debug(self.sequence2)
 
-    def dnarna(self, seq):
-        return set(seq).issubset(set("AUGC")) or set(seq).issubset(set("ATGC"))
+    def rna(self, seq):
+        return set(seq).issubset(set("AUGC"))
+
+    def dna(self, seq):
+        return set(seq).issubset(set("ATGC"))
+
+    #def dnarna(self, seq):
+    #    return self.rna(seq=seq) or self.dna(seq=seq)
 
     def both_sequences_same_type(self):
-        if self.dnarna(self.sequence1) != self.dnarna(self.sequence2):
-            return False, 'sequences not the same type'
-        return True, ''
+        if self.dna(self.sequence1) == self.dna(self.sequence2) and self.rna(self.sequence1) == self.rna(self.sequence2):
+            return True, ''
+        return False, 'sequences not the same type'
+        #if self.dnarna(self.sequence1) != self.dnarna(self.sequence2):
+        #    return False, 'sequences not the same type'
+        #return True, ''
 
     def remove_gaps(self, sequence):
         return sequence.replace("\n", "").replace(" ", "")

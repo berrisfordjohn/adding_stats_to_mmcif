@@ -105,7 +105,7 @@ class SequenceAlign():
             return True, '', self.score
         return False, 'sequences do not align', 0
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,

@@ -6,6 +6,7 @@ from pprint import pformat
 import argparse
 import logging
 from .pairwise_align import SequenceAlign
+from .get_data_from_pdbe_api import GetSpecificDataFromPdbeAPI
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
@@ -33,6 +34,7 @@ class ExtractFromMmcif():
         self.mmcif_file = mmcif_file
         self.mm = mmcifHandling(fileName=self.mmcif_file)
         self.sequence_dict = dict()
+        self.non_standard_residue_mapping = dict()
 
     def get_sequence_dict(self):
         self.mm.parse_mmcif()
@@ -42,6 +44,21 @@ class ExtractFromMmcif():
 
     def parse_mmcif(self):
         self.mm.parse_mmcif()
+
+    def get_non_standard_one_letter(self, threeLetter):
+        """
+        Return the one letter code for a non standard residue.
+        Checks the cache and then the PDBe API for the one letter code for a residue
+
+        threeLetter = non standard residue three letter code
+        returns the one letter code
+        """
+        if threeLetter in self.non_standard_residue_mapping:
+            oneLetter = self.non_standard_residue_mapping[threeLetter]
+        else:
+            oneLetter = GetSpecificDataFromPdbeAPI().get_one_letter_code_for_compound(compound=threeLetter)
+            self.non_standard_residue_mapping[threeLetter] = oneLetter
+        return oneLetter
 
     def get_seq_of_polymer_entities(self):
         internal_dict = dict()
@@ -57,7 +74,7 @@ class ExtractFromMmcif():
                 if threeLetter in residue_map_3to1:
                     oneLetter = residue_map_3to1[threeLetter]
                 else:
-                    oneLetter = 'X'
+                    oneLetter = self.get_non_standard_one_letter(threeLetter=threeLetter)
                 if hetero == 'n':
                     internal_dict.setdefault(entity_id, []).append(oneLetter)
 

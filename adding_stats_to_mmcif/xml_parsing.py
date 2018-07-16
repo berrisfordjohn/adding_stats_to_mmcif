@@ -26,7 +26,7 @@ def example_file():
     test_data = os.path.join(package_path, 'test_data')
     return os.path.join(test_data, "good_example.xml")
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     
     data = parse_xml(xml_file=example_file())
     print(data)

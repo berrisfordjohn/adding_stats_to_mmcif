@@ -27,7 +27,7 @@ class processFasta:
     def get_sequence_dict(self):
         return self.sequence_dict
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument('--fasta_file', help='input fasta file', type=str, required=True)
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,

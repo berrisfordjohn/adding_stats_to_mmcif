@@ -33,5 +33,5 @@ class TestProcessFasta(unittest.TestCase):
         self.assertTrue(len(data.keys()) == 3)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     unittest.main()

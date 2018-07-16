@@ -59,7 +59,7 @@ class GetDataFromPdbeAPi:
                 else:
                     logging.error(r.status_code, r.reason)
                     self.data = {}
-                    
+
             except Exception as e:
                 logging.error(e)
                 self.data = {}
@@ -83,7 +83,7 @@ class GetSpecificDataFromPdbeAPI:
                     one_letter_code = data['one_letter_code']
         return one_letter_code
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument('--entry_id', help='the entry to query', type=str, required=True)
     parser.add_argument('--api_end_point', help='the api end point', type=str, required=True)

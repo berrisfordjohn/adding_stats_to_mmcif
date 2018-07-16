@@ -5,15 +5,17 @@
 .idea/*
 __pycache__/*
 .vscode/*
+.vs/*
 
 # python egg metadata
 /*.egg-info
 .eggs/*
 
+# coverage result
+.coverage
+htmlcov/*
+
 # test data
 ignore_*
+out.cif
 
-
-*.sqlite
-/out.cif
-.vs/*

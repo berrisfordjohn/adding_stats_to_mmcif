@@ -165,6 +165,16 @@ class aimlessReport:
                     version = head.attrib['version']
         return version
 
+    def get_aimless_version_dict(self):
+        version = self.get_aimlesss_version()
+        software_row = {}
+        software_row['name'] = 'Aimless'
+        software_row['classification'] = 'data scaling'
+        if version:
+            software_row['version'] = str(version)
+
+        return software_row
+
 if __name__ == '__main__': # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument('--xml_file', help='input xml file', type=str, required=True)

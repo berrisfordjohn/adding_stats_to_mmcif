@@ -8,15 +8,28 @@ logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
 logging.basicConfig(format=FORMAT)
 
+def get_xml_data(xml_file):
+    # get data from aimless XML file
+    ar = aimlessReport(xml_file=xml_file)
+    xml_data = ar.return_data()
+    software_row = ar.get_aimless_version_dict()
 
-def aimless_software_row(version=''):
-    software_row = {}
-    software_row['name'] = 'Aimless'
-    software_row['classification'] = 'data scaling'
-    if version:
-        software_row['version'] = version
+    return xml_data, software_row
 
-    return software_row
+def main(xml_file, input_cif, output_cif):
+    xml_data, software_row = get_xml_data(xml_file=xml_file)
+    if xml_data:
+        # if there is data from the XML file then add this to the mmCIF file
+        pc = mmcifHandling(fileName=input_cif)
+        pc.parse_mmcif()
+        # add aimless data to the mmCIF file
+        pc.addToCif(data_dictionary=xml_data)
+        #update the software list in the mmCIF file to add aimless
+        software_cat = pc.addValuesToCategory(category='software', item_value_dictionary=software_row, ordinal_item='pdbx_ordinal')
+        pc.addToCif(data_dictionary=software_cat)
+        # write out the resulting mmCIF file.
+        pc.writeCif(fileName=output_cif)
+
 
 if __name__ == '__main__':
 
@@ -36,19 +49,4 @@ if __name__ == '__main__':
     input_cif = args.input_mmcif
     output_cif = args.output_mmcif
 
-    # get data from aimless XML file
-    ar = aimlessReport(xml_file=xml_file)
-    xml_data = ar.return_data()
-    aimless_version = ar.get_aimlesss_version()
-    if xml_data:
-        # if there is data from the XNL file then add this to the mmCIF file
-        pc = mmcifHandling(fileName=input_cif)
-        pc.parse_mmcif()
-        # add aimless data to the mmCIF file
-        pc.addToCif(data_dictionary=xml_data)
-        #update the software list in the mmCIF file to add aimless
-        aimless_dict = aimless_software_row(version=aimless_version)
-        software_cat = pc.addValuesToCategory(category='software', item_value_dictionary=aimless_dict, ordinal_item='pdbx_ordinal')
-        pc.addToCif(data_dictionary=software_cat)
-        # write out the resulting mmCIF file.
-        pc.writeCif(fileName=output_cif)
+    main(xml_file=xml_file, input_cif=input_cif, output_cif=output_cif)

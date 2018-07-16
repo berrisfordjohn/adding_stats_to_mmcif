@@ -37,9 +37,10 @@ class ExtractFromMmcif():
         self.non_standard_residue_mapping = dict()
 
     def get_sequence_dict(self):
-        self.mm.parse_mmcif()
-        self.get_seq_of_polymer_entities()
-        self.get_data_from_atom_site()
+        parsed = self.mm.parse_mmcif()
+        if parsed:
+            self.get_seq_of_polymer_entities()
+            self.get_data_from_atom_site()
         return self.sequence_dict
 
     def parse_mmcif(self):

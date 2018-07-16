@@ -10,7 +10,7 @@ install:
 
 # Command to run tests
 #script: python setup.py test
-script: coverage run setup.py test
+script: coverage run --source adding_stats_to_mmcif setup.py test
 
 after_success:
     coveralls

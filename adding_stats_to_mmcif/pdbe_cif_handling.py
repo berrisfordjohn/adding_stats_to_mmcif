@@ -1,12 +1,13 @@
 #!/usr/bin/env python
-import logging # pragma: no cover
-import mmCif.mmcifIO as mmcif # pragma: no cover
-import pprint # pragma: no cover
-import os # pragma: no cover
-import argparse # pragma: no cover
+import logging 
+import mmCif.mmcifIO as mmcif 
+import pprint 
+import os 
+import argparse 
 
 logger = logging.getLogger()
-
+FORMAT = "%(filename)s - %(funcName)s - %(message)s"
+logging.basicConfig(format=FORMAT)
 
 class mmcifHandling:
     def __init__(self, fileName, datablock=0, atom_site=True):

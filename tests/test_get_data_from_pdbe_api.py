@@ -59,5 +59,5 @@ class TestAddDataFromAimless(unittest.TestCase):
         s = GetSpecificDataFromPdbeAPI().get_one_letter_code_for_compound(compound=None)
         self.assertEqual(s, 'X')
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__':
     unittest.main()

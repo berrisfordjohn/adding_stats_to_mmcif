@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-import logging # pragma: no cover
-import argparse # pragma: no cover
-from Bio import SeqIO, Align # pragma: no cover
-from Bio import pairwise2 # pragma: no cover
-from Bio.SubsMat import MatrixInfo as matlist # pragma: no cover
-#from Bio import AlignIO # pragma: no cover
-#from Bio.Emboss.Applications import NeedleCommandline # pragma: no cover
-#import StringIO # pragma: no cover
+import logging 
+import argparse 
+from Bio import SeqIO, Align 
+from Bio import pairwise2 
+from Bio.SubsMat import MatrixInfo as matlist 
+#from Bio import AlignIO 
+#from Bio.Emboss.Applications import NeedleCommandline 
+#import StringIO 
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
@@ -104,7 +104,7 @@ class SequenceAlign():
             return True, '', self.score
         return False, 'sequences do not align', 0
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__': 
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,

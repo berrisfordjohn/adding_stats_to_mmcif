@@ -1,6 +1,4 @@
-from setuptools import setup, find_packages
-
-
+from setuptools import setup, find_packages 
 
 setup(
     name='adding_stats_to_mmcif',

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import logging # pragma: no cover
-from gemmi import cif # pragma: no cover
-import pprint # pragma: no cover
-import os # pragma: no cover
-import argparse # pragma: no cover
+import logging 
+from gemmi import cif 
+import pprint 
+import os 
+import argparse 
 
 logger = logging.getLogger()
 

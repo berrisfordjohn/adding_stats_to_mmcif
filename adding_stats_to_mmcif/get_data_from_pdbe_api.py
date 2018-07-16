@@ -1,9 +1,11 @@
-import re # pragma: no cover
-import requests # pragma: no cover
-from requests.packages.urllib3.util.retry import Retry # pragma: no cover
-from requests.adapters import HTTPAdapter # pragma: no cover
-import logging # pragma: no cover
-import argparse # pragma: no cover
+#!/usr/bin/env python
+
+import re 
+import requests 
+from requests.packages.urllib3.util.retry import Retry 
+from requests.adapters import HTTPAdapter 
+import logging 
+import argparse 
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
@@ -83,7 +85,7 @@ class GetSpecificDataFromPdbeAPI:
                     one_letter_code = data['one_letter_code']
         return one_letter_code
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__': 
     parser = argparse.ArgumentParser()
     parser.add_argument('--entry_id', help='the entry to query', type=str, required=True)
     parser.add_argument('--api_end_point', help='the api end point', type=str, required=True)

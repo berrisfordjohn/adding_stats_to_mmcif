@@ -1,4 +1,4 @@
-import logging # pragma: no cover
+import logging 
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"

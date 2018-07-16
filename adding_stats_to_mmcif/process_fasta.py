@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-from Bio import SeqIO # pragma: no cover
-import logging # pragma: no cover
-import argparse # pragma: no cover
-import os # pragma: no cover
+from Bio import SeqIO 
+import logging 
+import argparse 
+import os 
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
@@ -26,7 +26,7 @@ class processFasta:
     def get_sequence_dict(self):
         return self.sequence_dict
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__': 
     parser = argparse.ArgumentParser()
     parser.add_argument('--fasta_file', help='input fasta file', type=str, required=True)
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,

@@ -1,6 +1,8 @@
-import logging # pragma: no cover
-import os # pragma: no cover
-import xml.etree.ElementTree as ET # pragma: no cover
+#!/usr/bin/env python
+
+import logging 
+import os 
+import xml.etree.ElementTree as ET 
 
 
 def parse_xml(xml_file):
@@ -26,7 +28,7 @@ def example_file():
     test_data = os.path.join(package_path, 'test_data')
     return os.path.join(test_data, "good_example.xml")
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__': 
     
     data = parse_xml(xml_file=example_file())
     print(data)

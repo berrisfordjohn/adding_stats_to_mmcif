@@ -7,6 +7,6 @@ class TestAddDataFromAimless(unittest.TestCase):
         s = aimless_software_row()
         self.assertTrue(isinstance(s, dict))
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__': 
     unittest.main()
 

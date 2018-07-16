@@ -34,29 +34,34 @@ class GetDataFromPdbeAPi:
 
     def get_data(self):
         if self.url:
-            self.encode_url()
+            try:
+                self.encode_url()
 
-            s = requests.Session() # start a requests session
-            retries = Retry(total=5, # number of retries
-                            backoff_factor=1.0, # the factor time in seconds is multiplied by before a retry is tried again
-                            status_forcelist=[500, 502, 503, 504]) # retry for these status codes
-            s.mount('http://', HTTPAdapter(max_retries=retries)) # retry for these protocols.
-            s.mount('https://', HTTPAdapter(max_retries=retries))
+                s = requests.Session() # start a requests session
+                retries = Retry(total=5, # number of retries
+                                backoff_factor=1.0, # the factor time in seconds is multiplied by before a retry is tried again
+                                status_forcelist=[500, 502, 503, 504]) # retry for these status codes
+                s.mount('http://', HTTPAdapter(max_retries=retries)) # retry for these protocols.
+                s.mount('https://', HTTPAdapter(max_retries=retries))
 
-            r = s.get(url=self.url, timeout=60)
-            # r = requests.get(url=self.url, timeout=60)
+                r = s.get(url=self.url, timeout=60)
+                # r = requests.get(url=self.url, timeout=60)
 
-            if r.status_code == 200:
-                json_data = r.json()
-                if self.entry_id in json_data:
-                    self.data = json_data[self.entry_id]
+                if r.status_code == 200:
+                    json_data = r.json()
+                    if self.entry_id in json_data:
+                        self.data = json_data[self.entry_id]
+                    else:
+                        self.data = json_data
+                elif r.status_code == 404:
+                    self.data = {}
+
                 else:
-                    self.data = json_data
-            elif r.status_code == 404:
-                self.data = {}
-
-            else:
-                print(r.status_code, r.reason)
+                    logging.error(r.status_code, r.reason)
+                    self.data = {}
+                    
+            except Exception as e:
+                logging.error(e)
                 self.data = {}
 
     def return_data(self):

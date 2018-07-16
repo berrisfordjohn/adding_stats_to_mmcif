@@ -11,6 +11,14 @@ class TestAddDataFromAimless(unittest.TestCase):
         s = GetDataFromPdbeAPi(entry_id='ATP', end_point='compounds', server_root=None).return_data()
         self.assertEqual(s, dict())
 
+    def test_incorrect_server_within_api(self):
+        s = GetDataFromPdbeAPi(entry_id='ATP', end_point='compounds', server_root='https://www.ebi.ac.uk/pdbe/apiWRONG/').return_data()
+        self.assertEqual(s, dict())
+
+    def test_incorrect_server_url(self):
+        s = GetDataFromPdbeAPi(entry_id='ATP', end_point='compounds', server_root='https://www.ebiWRONG.ac.uk/pdbe/api/').return_data()
+        self.assertEqual(s, dict())
+
     def test_null_end_point(self):
         s = GetDataFromPdbeAPi(entry_id='ATP', end_point=None).return_data()
         self.assertEqual(s, dict())

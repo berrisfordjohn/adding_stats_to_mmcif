@@ -22,13 +22,13 @@ def parse_xml(xml_file):
 
         return root
 
-def example_file():
-    FILE_ROOT = os.path.dirname(os.path.realpath(__file__))
-    package_path = os.path.dirname(os.path.join(FILE_ROOT, '..', '..', ))
-    test_data = os.path.join(package_path, 'test_data')
-    return os.path.join(test_data, "good_example.xml")
 
 if __name__ == '__main__': 
     
-    data = parse_xml(xml_file=example_file())
+    FILE_ROOT = os.path.dirname(os.path.realpath(__file__))
+    package_path = os.path.dirname(os.path.join(FILE_ROOT, '..', '..', ))
+    test_data = os.path.join(package_path, 'test_data')
+    example_file = os.path.join(test_data, "good_example.xml")
+
+    data = parse_xml(xml_file=example_file)
     print(data)

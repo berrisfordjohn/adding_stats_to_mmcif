@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import logging
-import mmCif.mmcifIO as mmcif
-import pprint
-import os
-import argparse
+import logging # pragma: no cover
+import mmCif.mmcifIO as mmcif # pragma: no cover
+import pprint # pragma: no cover
+import os # pragma: no cover
+import argparse # pragma: no cover
 
 logger = logging.getLogger()
 

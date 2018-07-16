@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-
-from Bio import SeqIO
-import logging
-import argparse
-import os
+from Bio import SeqIO # pragma: no cover
+import logging # pragma: no cover
+import argparse # pragma: no cover
+import os # pragma: no cover
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"

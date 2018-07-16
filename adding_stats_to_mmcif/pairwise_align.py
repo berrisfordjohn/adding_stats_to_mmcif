@@ -1,13 +1,12 @@
 #!/usr/bin/env python
-
-import logging
-import argparse
-from Bio import SeqIO, Align
-from Bio import pairwise2
-from Bio.SubsMat import MatrixInfo as matlist
-#from Bio import AlignIO
-#from Bio.Emboss.Applications import NeedleCommandline
-#import StringIO
+import logging # pragma: no cover
+import argparse # pragma: no cover
+from Bio import SeqIO, Align # pragma: no cover
+from Bio import pairwise2 # pragma: no cover
+from Bio.SubsMat import MatrixInfo as matlist # pragma: no cover
+#from Bio import AlignIO # pragma: no cover
+#from Bio.Emboss.Applications import NeedleCommandline # pragma: no cover
+#import StringIO # pragma: no cover
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"

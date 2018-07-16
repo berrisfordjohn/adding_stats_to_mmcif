@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import logging
-import argparse
+import logging # pragma: no cover
+import argparse # pragma: no cover
 
 #from .pdbe_cif_handling import mmcifHandling as pdbe_cif_handling
 from .gemmi_cif_handling import mmcifHandling as gemmi_cif_handling

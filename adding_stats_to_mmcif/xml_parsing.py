@@ -1,6 +1,6 @@
-import logging
-import os
-import xml.etree.ElementTree as ET
+import logging # pragma: no cover
+import os # pragma: no cover
+import xml.etree.ElementTree as ET # pragma: no cover
 
 
 def parse_xml(xml_file):

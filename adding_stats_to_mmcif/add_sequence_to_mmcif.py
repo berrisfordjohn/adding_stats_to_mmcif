@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-import os
+import os # pragma: no cover
 from .cif_handling import mmcifHandling
 from .process_fasta import processFasta
-from pprint import pformat
-import argparse
-import logging
+from pprint import pformat # pragma: no cover
+import argparse # pragma: no cover
+import logging # pragma: no cover
 from .pairwise_align import SequenceAlign
 from .get_data_from_pdbe_api import GetSpecificDataFromPdbeAPI
 

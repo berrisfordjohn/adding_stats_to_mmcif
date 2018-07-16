@@ -6,6 +6,11 @@ python:
 install:
   - pip install --upgrade pip setuptools
   - pip install git+git://github.com/project-gemmi/gemmi.git
+  - pip install coveralls
 
 # Command to run tests
-script: python setup.py test
+#script: python setup.py test
+script: coverage run setup.py test
+
+after_success:
+    coveralls

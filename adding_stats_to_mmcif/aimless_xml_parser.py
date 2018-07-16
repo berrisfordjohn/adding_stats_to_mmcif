@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-import logging
-import pprint
-import os
-import argparse
+import logging # pragma: no cover
+import pprint # pragma: no cover
+import os # pragma: no cover
+import argparse # pragma: no cover
 from .xml_parsing import parse_xml
 
 logger = logging.getLogger()

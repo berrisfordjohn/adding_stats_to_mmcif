@@ -1,9 +1,9 @@
-import re
-import requests
-from requests.packages.urllib3.util.retry import Retry
-from requests.adapters import HTTPAdapter
-import logging
-import argparse
+import re # pragma: no cover
+import requests # pragma: no cover
+from requests.packages.urllib3.util.retry import Retry # pragma: no cover
+from requests.adapters import HTTPAdapter # pragma: no cover
+import logging # pragma: no cover
+import argparse # pragma: no cover
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"

@@ -18,7 +18,7 @@ class mmcifHandling:
         self.category = None
 
     def parse_mmcif(self):
-        '''parse the mmcif and return a dictionary file'''
+        """parse the mmcif and return a dictionary file"""
         # from http://gemmi.readthedocs.io/en/latest/cif-parser.html#python-module
         if self.f and os.path.exists(self.f):
             try:
@@ -33,6 +33,8 @@ class mmcifHandling:
         return False
 
     def getDatablock(self):
+        if not self.cifObj:
+            self.parse_mmcif()
         logging.debug('datablocks')
         logging.debug(self.cifObj)
         try:
@@ -44,6 +46,8 @@ class mmcifHandling:
         return False
 
     def getDataBlockWithMostCat(self):
+        if not self.cifObj:
+            self.parse_mmcif()
         logging.debug('getDataBlockWithMostCat')
         largest_num = 0
         datablockToGet = None
@@ -60,6 +64,8 @@ class mmcifHandling:
         self.cif_categories = self.cifObj[datablockToGet]
 
     def getDataBlockWithAtomSite(self):
+        if not self.cifObj:
+            self.parse_mmcif()
         logging.debug('getDataBlockWithAtomSite')
         datablockToGet = None
         for position, datablock in enumerate(self.cifObj):
@@ -83,6 +89,8 @@ class mmcifHandling:
         return self.category
 
     def getCatItemsValues(self, category, items):
+        if not self.cifObj:
+            self.parse_mmcif()
         result_dict = dict()
         category = self.prepare_cat(category=category)
         table_view = self.cif_categories.find(category, items)
@@ -92,12 +100,16 @@ class mmcifHandling:
         return result_dict
 
     def getCatItemValues(self, category, item):
+        if not self.cifObj:
+            self.parse_mmcif()
         items = [item]
         result_dict = self.getCatItemsValues(category=category, items=items)
         values = result_dict[item]
         return values
 
     def getCategory(self, category):
+        if not self.cifObj:
+            self.parse_mmcif()
         logging.debug('getCategory')
         mmcif_dictionary = dict()
         category = self.prepare_cat(category=category)
@@ -113,7 +125,8 @@ class mmcifHandling:
         return mmcif_dictionary
 
     def getCategoryList(self, category):
-
+        if not self.cifObj:
+            self.parse_mmcif()
         self.prepare_cat(category=category)
         mmcif_dictionary = self.getCategory(category=self.category)
         # logging.debug(mmcif_dictionary)
@@ -130,6 +143,8 @@ class mmcifHandling:
         return mmcif_cat_list
 
     def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
+        if not self.cifObj:
+            self.parse_mmcif()
         category = self.prepare_cat(category=category)
         current_values = self.getCategory(category=category)
         if current_values:
@@ -157,6 +172,8 @@ class mmcifHandling:
         pass
 
     def addToCif(self, data_dictionary):
+        if not self.cifObj:
+            self.parse_mmcif()
         logging.debug('addToCif')
         logging.debug(data_dictionary)
         try:
@@ -172,8 +189,13 @@ class mmcifHandling:
         return False
 
     def writeCif(self, fileName):
+        if not self.cifObj:
+            return False
         logging.debug('writing out to {}'.format(fileName))
         self.cifObj.write_file(fileName)
+        if os.path.exists(fileName):
+            return True
+        return False
 
 
 if __name__ == '__main__':

@@ -35,14 +35,15 @@ class ExtractFromMmcif():
         self.non_standard_residue_mapping = dict()
 
     def get_sequence_dict(self):
-        parsed = self.mm.parse_mmcif()
+        parsed = self.parse_mmcif()
         if parsed:
             self.get_seq_of_polymer_entities()
             self.get_data_from_atom_site()
         return self.sequence_dict
 
     def parse_mmcif(self):
-        self.mm.parse_mmcif()
+        parsed = self.mm.parse_mmcif()
+        return parsed
 
     def get_non_standard_one_letter(self, threeLetter):
         """
@@ -66,17 +67,18 @@ class ExtractFromMmcif():
             # logging.debug(row_list)
             for row in row_list:
                 entity_id = row['entity_id']
-                threeLetter = row['mon_id']
+                three_letter = row['mon_id']
                 num = row['num']
                 hetero = row['hetero']
 
-                if threeLetter in residue_map_3to1:
-                    oneLetter = residue_map_3to1[threeLetter]
+                if three_letter in residue_map_3to1:
+                    one_letter = residue_map_3to1[three_letter]
                 else:
-                    oneLetter = self.get_non_standard_one_letter(threeLetter=threeLetter)
-                if hetero == 'n':
-                    internal_dict.setdefault(entity_id, []).append(oneLetter)
+                    one_letter = self.get_non_standard_one_letter(threeLetter=three_letter)
+                # if hetero == 'n': # hetero is used for a heterogen instead of microhet in refmac.
+                internal_dict.setdefault(entity_id, []).append(one_letter)
 
+        logging.debug('internal_dict: {}'.format(internal_dict))
         for entity_id in internal_dict:
             sequence_list = internal_dict[entity_id]
             sequence = ''.join(sequence_list)
@@ -85,40 +87,38 @@ class ExtractFromMmcif():
 
     def get_data_from_atom_site(self):
         atom_site_dict = dict()
-        sequence_dict = dict()
+        atom_site_sequence_dict = dict()
         if self.mm:
             row_list = self.mm.getCategoryList('atom_site')
             for row in row_list:
                 entity_id = row['label_entity_id']
                 chain_id = row['auth_asym_id']
-                threeLetter = row['auth_comp_id']
+                three_letter = row['auth_comp_id']
                 residue_number = row['auth_seq_id']
                 ins_code = row['pdbx_PDB_ins_code']
                 group_PDB = row['group_PDB']
 
-                if threeLetter in residue_map_3to1:
-                    oneLetter = residue_map_3to1[threeLetter]
+                if three_letter in residue_map_3to1:
+                    one_letter = residue_map_3to1[three_letter]
                 else:
-                    oneLetter = 'X'
+                    one_letter = self.get_non_standard_one_letter(threeLetter=three_letter)
 
-                # TODO is this right? Can this be relied upon?
-                if group_PDB == 'ATOM':
-                    # logging.debug('{} {}{} {}'.format(entity_id, chain_id, residue_number, oneLetter))
-                    atom_site_dict.setdefault(entity_id, {}).setdefault(chain_id, [])
-                    if residue_number not in atom_site_dict[entity_id][chain_id]:
-                        # logging.debug('new residue')
-                        sequence_dict.setdefault(entity_id, {}).setdefault(chain_id, []).append(oneLetter)
-                        atom_site_dict[entity_id][chain_id].append(residue_number)
+                # logging.debug('{} {}{} {}'.format(entity_id, chain_id, residue_number, one_letter))
+                atom_site_dict.setdefault(entity_id, {}).setdefault(chain_id, [])
+                if residue_number not in atom_site_dict[entity_id][chain_id]:
+                    # logging.debug('new residue')
+                    atom_site_sequence_dict.setdefault(entity_id, {}).setdefault(chain_id, []).append(one_letter)
+                    atom_site_dict[entity_id][chain_id].append(residue_number)
 
         logging.debug('atom site dict: {}'.format(atom_site_dict))
-        logging.debug('sequence dict: {}'.format(sequence_dict))
-        for entity_id in sequence_dict:
-            for chain_id in sequence_dict[entity_id]:
-                if chain_id not in self.sequence_dict.setdefault(entity_id, {}).setdefault('chains', []):
-                    self.sequence_dict.setdefault(entity_id, {}).setdefault('chains', []).append(chain_id)
-                if 'sequence' not in self.sequence_dict[entity_id]:
-                    oneLetterSequence = ''.join(sequence_dict[entity_id][chain_id])
-                    self.sequence_dict[entity_id]['sequence'] = oneLetterSequence
+        logging.debug('sequence dict: {}'.format(atom_site_sequence_dict))
+        for entity_id in atom_site_sequence_dict:
+            for chain_id in atom_site_sequence_dict[entity_id]:
+                if entity_id in self.sequence_dict:
+                    if 'sequence' in self.sequence_dict[entity_id]:
+                        self.sequence_dict.setdefault(entity_id, {}).setdefault('chains', []).append(chain_id)
+                        one_letter_sequence = ''.join(atom_site_sequence_dict[entity_id][chain_id])
+                        self.sequence_dict.setdefault(entity_id, {})['sequence'] = one_letter_sequence
 
     def remove_category(self, category):
         self.mm.removeCategory(category=category)
@@ -229,6 +229,7 @@ class AddSequenceToMmcif:
 
 
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--output_mmcif', help='output mmcif file', type=str, required=True)
     parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)
@@ -239,7 +240,6 @@ if __name__ == '__main__':
                         default=logging.INFO)
 
     args = parser.parse_args()
-
     logger.setLevel(args.loglevel)
 
     worked = AddSequenceToMmcif(input_mmcif=args.input_mmcif,

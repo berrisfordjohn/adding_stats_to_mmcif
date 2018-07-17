@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-import logging 
-import pprint 
-import os 
-import argparse 
+import logging
+import pprint
+import os
+import argparse
 from .xml_parsing import parse_xml
 
 logger = logging.getLogger()
@@ -167,7 +167,7 @@ class aimlessReport:
 
     def get_aimless_version_dict(self):
         version = self.get_aimlesss_version()
-        software_row = {}
+        software_row = dict()
         software_row['name'] = 'Aimless'
         software_row['classification'] = 'data scaling'
         if version:
@@ -175,7 +175,8 @@ class aimlessReport:
 
         return software_row
 
-if __name__ == '__main__': # pragma: no cover
+
+if __name__ == '__main__':  # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument('--xml_file', help='input xml file', type=str, required=True)
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,

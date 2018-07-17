@@ -1,17 +1,19 @@
 #!/usr/bin/env python
-from Bio import SeqIO 
-import logging 
-import argparse 
-import os 
+from Bio import SeqIO
+import logging
+import argparse
+import os
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
 logging.basicConfig(format=FORMAT)
 
-class processFasta:
+
+class ProcessFasta:
 
     def __init__(self, fasta_file):
         self.fasta_file = fasta_file
+        self.fasta_data = None
         self.sequence_dict = dict()
 
     def process_fasta_file(self):
@@ -26,7 +28,8 @@ class processFasta:
     def get_sequence_dict(self):
         return self.sequence_dict
 
-if __name__ == '__main__': 
+
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--fasta_file', help='input fasta file', type=str, required=True)
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,
@@ -36,7 +39,7 @@ if __name__ == '__main__':
 
     logger.setLevel(args.loglevel)
 
-    pf = processFasta(fasta_file=args.fasta_file)
+    pf = ProcessFasta(fasta_file=args.fasta_file)
     pf.process_fasta_file()
     results = pf.get_sequence_dict()
     for result in results:

@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 
-import re 
-import requests 
-from requests.packages.urllib3.util.retry import Retry 
-from requests.adapters import HTTPAdapter 
-import logging 
-import argparse 
+import re
+import requests
+from requests.packages.urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
+import logging
+import argparse
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
 logging.basicConfig(format=FORMAT)
 
-
 BASE_URL = 'https://www.ebi.ac.uk/pdbe/api/'
 API_END_POINTS = {'compounds': 'pdb/compound/summary/'}
+
 
 class GetDataFromPdbeAPi:
 
@@ -39,11 +39,12 @@ class GetDataFromPdbeAPi:
             try:
                 self.encode_url()
 
-                s = requests.Session() # start a requests session
-                retries = Retry(total=5, # number of retries
-                                backoff_factor=1.0, # the factor time in seconds is multiplied by before a retry is tried again
-                                status_forcelist=[500, 502, 503, 504]) # retry for these status codes
-                s.mount('http://', HTTPAdapter(max_retries=retries)) # retry for these protocols.
+                s = requests.Session()  # start a requests session
+                retries = Retry(total=5,  # number of retries
+                                backoff_factor=1.0,
+                                # the factor time in seconds is multiplied by before a retry is tried again
+                                status_forcelist=[500, 502, 503, 504])  # retry for these status codes
+                s.mount('http://', HTTPAdapter(max_retries=retries))  # retry for these protocols.
                 s.mount('https://', HTTPAdapter(max_retries=retries))
 
                 r = s.get(url=self.url, timeout=60)
@@ -77,7 +78,7 @@ class GetSpecificDataFromPdbeAPI:
 
     def get_one_letter_code_for_compound(self, compound):
         one_letter_code = 'X'
-        if compound:        
+        if compound:
             compound = compound.upper()
             pdbe_api_data = GetDataFromPdbeAPi(entry_id=compound, end_point='compounds').return_data()
             if pdbe_api_data:
@@ -85,7 +86,8 @@ class GetSpecificDataFromPdbeAPI:
                     one_letter_code = data['one_letter_code']
         return one_letter_code
 
-if __name__ == '__main__': 
+
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--entry_id', help='the entry to query', type=str, required=True)
     parser.add_argument('--api_end_point', help='the api end point', type=str, required=True)

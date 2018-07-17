@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import logging 
-from gemmi import cif 
-import pprint 
-import os 
-import argparse 
+import logging
+from gemmi import cif
+import pprint
+import os
+import argparse
 
 logger = logging.getLogger()
 
@@ -24,9 +24,9 @@ class mmcifHandling:
             try:
                 self.cifObj = cif.read_file(self.f)  # copy all the data from mmCIF file
                 if self.cifObj:
-                    #self.getDataBlockWithMostCat()
+                    # self.getDataBlockWithMostCat()
                     self.getDataBlockWithAtomSite()
-                    #self.getDatablock()
+                    # self.getDatablock()
                     return True
             except Exception as e:
                 logging.error(e)
@@ -38,7 +38,7 @@ class mmcifHandling:
         try:
             if self.datablock in self.cifObj:
                 self.cif_categories = self.cifObj[self.datablock]
-                return True 
+                return True
         except Exception as e:
             logging.error(e)
         return False
@@ -66,12 +66,11 @@ class mmcifHandling:
             logging.debug(datablock)
             cif_categories = self.cifObj[position]
             atom_site = cif_categories.find_values('_atom_site.id')
-            #logging.debug(atom_site)
+            # logging.debug(atom_site)
             if atom_site:
                 datablockToGet = position
         logging.debug('datablock with atom_site cat: %s' % datablockToGet)
         self.cif_categories = self.cifObj[datablockToGet]
-
 
     def prepare_cat(self, category):
         self.category = category
@@ -114,16 +113,16 @@ class mmcifHandling:
         return mmcif_dictionary
 
     def getCategoryList(self, category):
-        
+
         self.prepare_cat(category=category)
         mmcif_dictionary = self.getCategory(category=self.category)
-        #logging.debug(mmcif_dictionary)
+        # logging.debug(mmcif_dictionary)
 
         mmcif_cat_list = list()
         if self.category in mmcif_dictionary:
             first_key_in_mmcif_dict = list(mmcif_dictionary[self.category].keys())[0]
             len_of_values = len(mmcif_dictionary[self.category][first_key_in_mmcif_dict])
-            mmcif_cat_list = [{} for i in range(1, len_of_values+1)]
+            mmcif_cat_list = [{} for i in range(1, len_of_values + 1)]
             for item in mmcif_dictionary[self.category]:
                 for position, value in enumerate(mmcif_dictionary[self.category][item]):
                     mmcif_cat_list[position][item] = value
@@ -152,10 +151,9 @@ class mmcifHandling:
 
         return current_values
 
-
     def removeCategory(self, category):
         category = self.prepare_cat(category=category)
-        #self.cif_categories.delete_category(category)
+        # self.cif_categories.delete_category(category)
         pass
 
     def addToCif(self, data_dictionary):
@@ -166,7 +164,7 @@ class mmcifHandling:
                 for category in data_dictionary:
                     values = data_dictionary[category]
                     category = self.prepare_cat(category=category)
-                    #self.removeCategory(category=category)
+                    # self.removeCategory(category=category)
                     self.cif_categories.set_mmcif_category(category, values)
             return True
         except Exception as e:

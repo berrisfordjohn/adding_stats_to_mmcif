@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-import os 
+import os
 from .cif_handling import mmcifHandling
-from .process_fasta import processFasta
-from pprint import pformat 
-import argparse 
-import logging 
+from .process_fasta import ProcessFasta
+import argparse
+import logging
 from .pairwise_align import SequenceAlign
 from .get_data_from_pdbe_api import GetSpecificDataFromPdbeAPI
 
@@ -13,9 +12,9 @@ FORMAT = "%(filename)s - %(funcName)s - %(message)s"
 logging.basicConfig(format=FORMAT)
 
 residue_map_1to3 = {
-    'A': 'ALA', 'C': 'CYS', 'D': 'ASP', 'E': 'GLU', 'F': 'PHE', 'G': 'GLY',\
-    'H': 'HIS', 'I': 'ILE', 'K': 'LYS', 'L': 'LEU', 'M': 'MET', 'N': 'ASN',\
-    'P': 'PRO', 'Q': 'GLN', 'R': 'ARG', 'S': 'SER', 'T': 'THR', 'V': 'VAL',\
+    'A': 'ALA', 'C': 'CYS', 'D': 'ASP', 'E': 'GLU', 'F': 'PHE', 'G': 'GLY',
+    'H': 'HIS', 'I': 'ILE', 'K': 'LYS', 'L': 'LEU', 'M': 'MET', 'N': 'ASN',
+    'P': 'PRO', 'Q': 'GLN', 'R': 'ARG', 'S': 'SER', 'T': 'THR', 'V': 'VAL',
     'W': 'TRP', 'Y': 'TYR',
 }
 
@@ -25,7 +24,6 @@ residue_map_3to1['G'] = 'G'
 residue_map_3to1['C'] = 'C'
 residue_map_3to1['T'] = 'T'
 residue_map_3to1['U'] = 'U'
-
 
 
 class ExtractFromMmcif():
@@ -65,7 +63,7 @@ class ExtractFromMmcif():
         internal_dict = dict()
         if self.mm:
             row_list = self.mm.getCategoryList('entity_poly_seq')
-            #logging.debug(row_list)
+            # logging.debug(row_list)
             for row in row_list:
                 entity_id = row['entity_id']
                 threeLetter = row['mon_id']
@@ -105,10 +103,10 @@ class ExtractFromMmcif():
 
                 # TODO is this right? Can this be relied upon?
                 if group_PDB == 'ATOM':
-                    #logging.debug('{} {}{} {}'.format(entity_id, chain_id, residue_number, oneLetter))
+                    # logging.debug('{} {}{} {}'.format(entity_id, chain_id, residue_number, oneLetter))
                     atom_site_dict.setdefault(entity_id, {}).setdefault(chain_id, [])
                     if residue_number not in atom_site_dict[entity_id][chain_id]:
-                        #logging.debug('new residue')
+                        # logging.debug('new residue')
                         sequence_dict.setdefault(entity_id, {}).setdefault(chain_id, []).append(oneLetter)
                         atom_site_dict[entity_id][chain_id].append(residue_number)
 
@@ -121,17 +119,18 @@ class ExtractFromMmcif():
                 if 'sequence' not in self.sequence_dict[entity_id]:
                     oneLetterSequence = ''.join(sequence_dict[entity_id][chain_id])
                     self.sequence_dict[entity_id]['sequence'] = oneLetterSequence
-                
 
     def remove_category(self, category):
         self.mm.removeCategory(category=category)
 
     def add_to_mmcif(self, category, item_value_dict, ordinal=None):
-        category_dict = self.mm.addValuesToCategory(category=category, item_value_dictionary=item_value_dict, ordinal_item=ordinal)
+        category_dict = self.mm.addValuesToCategory(category=category, item_value_dictionary=item_value_dict,
+                                                    ordinal_item=ordinal)
         self.mm.addToCif(category_dict)
 
     def write_mmcif(self, filename):
         self.mm.writeCif(fileName=filename)
+
 
 class AddSequenceToMmcif:
 
@@ -146,13 +145,12 @@ class AddSequenceToMmcif:
         self.mmcif_sequence_dict = dict()
         self.mmcif = None
 
-
     def process_fasta(self):
         if self.fasta_file:
-            pf = processFasta(fasta_file=self.fasta_file)
+            pf = ProcessFasta(fasta_file=self.fasta_file)
             pf.process_fasta_file()
             self.input_sequence_dict = pf.get_sequence_dict()
-            
+
     def process_sequence(self):
         if self.input_sequence and self.input_chain_ids:
             logging.debug('processing sequence')
@@ -180,7 +178,6 @@ class AddSequenceToMmcif:
                         best_seq = test_sequence
                         score = best_score
         return best_seq, best_score
-        
 
     def match_sequences(self):
         mmcif_out = []
@@ -194,20 +191,18 @@ class AddSequenceToMmcif:
 
                 matched_sequence, matched_score = self.get_best_match(mmcif_sequence=mmcif_sequence)
                 if matched_sequence:
-                    mmcif_out.append({'entity_id': entity_id, 
-                                    'pdbx_seq_one_letter_code': matched_sequence,
-                                    'pdbx_strand_id': ','.join(chain_ids)})
-
+                    mmcif_out.append({'entity_id': entity_id,
+                                      'pdbx_seq_one_letter_code': matched_sequence,
+                                      'pdbx_strand_id': ','.join(chain_ids)})
 
         if mmcif_out:
             logging.debug('adding data to mmcif: {}'.format(mmcif_out))
             mmcif_dict = {'entity_poly': mmcif_out}
-            #self.mmcif.remove_category(category='entity_poly')
+            # self.mmcif.remove_category(category='entity_poly')
             self.add_to_mmcif(mmcif_dict=mmcif_dict)
             self.mmcif.write_mmcif(filename=self.output_cif)
         else:
             logging.debug('no sequence to add to mmcif')
-
 
     def add_to_mmcif(self, mmcif_dict):
         logging.debug(mmcif_dict)
@@ -215,7 +210,6 @@ class AddSequenceToMmcif:
             for row in mmcif_dict[cat]:
                 logging.debug(row)
                 self.mmcif.add_to_mmcif(category=cat, item_value_dict=row)
-
 
     def process_data(self):
         self.process_fasta()
@@ -235,7 +229,6 @@ class AddSequenceToMmcif:
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--output_mmcif', help='output mmcif file', type=str, required=True)
     parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)
@@ -249,8 +242,8 @@ if __name__ == '__main__':
 
     logger.setLevel(args.loglevel)
 
-    worked = AddSequenceToMmcif(input_mmcif=args.input_mmcif, 
-                                output_mmcif=args.output_mmcif, 
-                                fasta_file=args.fasta_file, 
-                                input_sequence=args.sequence, 
+    worked = AddSequenceToMmcif(input_mmcif=args.input_mmcif,
+                                output_mmcif=args.output_mmcif,
+                                fasta_file=args.fasta_file,
+                                input_sequence=args.sequence,
                                 input_chainids=args.chain_ids).process_data()

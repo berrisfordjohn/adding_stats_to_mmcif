@@ -1,26 +1,28 @@
 #!/usr/bin/env python
-import logging 
-import argparse 
-from Bio import SeqIO, Align 
-from Bio import pairwise2 
-from Bio.SubsMat import MatrixInfo as matlist 
-#from Bio import AlignIO 
-#from Bio.Emboss.Applications import NeedleCommandline 
-#import StringIO 
+import logging
+import argparse
+from Bio import Align
+from Bio import pairwise2
+from Bio.SubsMat import MatrixInfo as matlist
+
+# from Bio import AlignIO
+# from Bio.Emboss.Applications import NeedleCommandline
+# import StringIO
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
 logging.basicConfig(format=FORMAT)
 
-#needle_cline = NeedleCommandline()
-##needle_cline.gapopen = 0.5
-##needle_cline.gapextend = 0.1
-#needle_cline.gapopen = 10
-#needle_cline.gapextend = 0.5
-##needle_cline.stdout = True
-#needle_cline.outfile = "stdout"
 
-class SequenceAlign():
+# needle_cline = NeedleCommandline()
+# needle_cline.gapopen = 0.5
+# needle_cline.gapextend = 0.1
+# needle_cline.gapopen = 10
+# needle_cline.gapextend = 0.5
+# needle_cline.stdout = True
+# needle_cline.outfile = "stdout"
+
+class SequenceAlign:
 
     def __init__(self, sequence1, sequence2):
         self.sequence1 = sequence1
@@ -35,16 +37,17 @@ class SequenceAlign():
     def dna(self, seq):
         return set(seq).issubset(set("ATGC"))
 
-    #def dnarna(self, seq):
+    # def dnarna(self, seq):
     #    return self.rna(seq=seq) or self.dna(seq=seq)
 
     def both_sequences_same_type(self):
-        if self.dna(self.sequence1) == self.dna(self.sequence2) and self.rna(self.sequence1) == self.rna(self.sequence2):
+        if self.dna(self.sequence1) == self.dna(self.sequence2) and self.rna(self.sequence1) == self.rna(
+                self.sequence2):
             return True, ''
         return False, 'sequences not the same type'
-        #if self.dnarna(self.sequence1) != self.dnarna(self.sequence2):
+        # if self.dnarna(self.sequence1) != self.dnarna(self.sequence2):
         #    return False, 'sequences not the same type'
-        #return True, ''
+        # return True, ''
 
     def remove_gaps(self, sequence):
         return sequence.replace("\n", "").replace(" ", "")
@@ -52,12 +55,12 @@ class SequenceAlign():
     def prepare_sequences(self):
         self.sequence1 = self.remove_gaps(self.sequence1)
         self.sequence2 = self.remove_gaps(self.sequence2)
-        #if len(self.sequence1) > 2000 or len(self.sequence2) > 2000:
+        # if len(self.sequence1) > 2000 or len(self.sequence2) > 2000:
         #    return False, 'sequences too long. Please install emboss needle'
         return self.both_sequences_same_type()
 
     def pairwise2(self):
-        
+
         matrix = matlist.blosum62
         gap_open = -10
         gap_extend = -0.5
@@ -73,11 +76,11 @@ class SequenceAlign():
         aligner.extend_gap_score = -0.5
         aligner.target_end_gap_score = 0.0
         aligner.query_end_gap_score = 0.0
-        #aligner.match = 2
-        #aligner.mismatch = -1
+        # aligner.match = 2
+        # aligner.mismatch = -1
         # only need to run aligner.score. This improves memory usage and speed. 
-        #alignments = aligner.align(self.sequence1, self.sequence2)
-        #for alignment in sorted(alignments):
+        # alignments = aligner.align(self.sequence1, self.sequence2)
+        # for alignment in sorted(alignments):
         #    logging.debug(alignment)
         align_score = aligner.score(self.sequence1, self.sequence2)
         logging.info(align_score)
@@ -113,7 +116,8 @@ class SequenceAlign():
             return True, '', self.score
         return False, 'sequences do not align', 0
 
-if __name__ == '__main__': 
+
+if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,
@@ -121,9 +125,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     logger.setLevel(args.loglevel)
 
-    test_sequences = ['MEKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR',
-                'TRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGE',
-                'DMEGYFVDE', 'RANDOM']
+    test_sequences = [
+        'MEKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR',
+        'TRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGE',
+        'DMEGYFVDE', 'RANDOM']
 
     for sequence in test_sequences:
         sa = SequenceAlign(sequence1=test_sequences[0], sequence2=sequence)

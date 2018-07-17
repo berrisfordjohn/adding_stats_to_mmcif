@@ -1,13 +1,14 @@
 #!/usr/bin/env python
-import logging 
-import mmCif.mmcifIO as mmcif 
-import pprint 
-import os 
-import argparse 
+import logging
+import mmCif.mmcifIO as mmcif
+import pprint
+import os
+import argparse
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
 logging.basicConfig(format=FORMAT)
+
 
 class mmcifHandling:
     def __init__(self, fileName, datablock=0, atom_site=True):
@@ -176,7 +177,7 @@ if __name__ == '__main__':
     mh = mmcifHandling(fileName=input_cif)
     parsed_cif = mh.parse_mmcif()
     if parsed_cif:
-        #mh.getDataBlockWithMostCat()
+        # mh.getDataBlockWithMostCat()
         mh.getDataBlockWithAtomSite()
         test_dict = mh.getCategory(category=cat)
         mh.removeCategory(category=cat)

@@ -4,16 +4,16 @@ from tests.access_test_files import TestFiles
 
 from adding_stats_to_mmcif.xml_parsing import parse_xml
 
+
 class TestXmlParsing(unittest.TestCase):
 
     def setUp(self):
-
         self.test_files = TestFiles()
 
     def test_none_type(self):
         s = parse_xml(xml_file=None)
         self.assertIsNone(s)
-    
+
     def test_none_existing_file(self):
         s = parse_xml(xml_file='does_not_exist')
         self.assertIsNone(s)
@@ -31,5 +31,5 @@ class TestXmlParsing(unittest.TestCase):
         self.assertIsNone(s)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
     unittest.main()

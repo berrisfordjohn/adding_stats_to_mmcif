@@ -3,10 +3,10 @@ from tests.access_test_files import TestFiles
 
 from adding_stats_to_mmcif.aimless_xml_parser import aimlessReport
 
+
 class TestAimlessReportGeneration(unittest.TestCase):
 
     def setUp(self):
-
         self.test_files = TestFiles()
 
     def test_xml_none_type(self):
@@ -24,7 +24,7 @@ class TestAimlessReportGeneration(unittest.TestCase):
     def test_non_aimless_xml_file(self):
         s = aimlessReport(xml_file=self.test_files.TEST_NON_AIMLESS_XML_FILE).parse_xml()
         self.assertFalse(s)
-    
+
     def test_aimless_xml_file(self):
         s = aimlessReport(xml_file=self.test_files.TEST_AIMLESS_XML_FILE).parse_xml()
         self.assertTrue(s)
@@ -50,13 +50,13 @@ class TestAimlessReportGeneration(unittest.TestCase):
         data = s.return_data()
         self.assertTrue(isinstance(data, dict))
         self.assertNotEqual(data, dict())
-    
+
     def test_aimless_data_aimless_xml_file_no_data(self):
         s = aimlessReport(xml_file=self.test_files.TEST_AIMLESS_XML_FILE_NO_DATA)
         data = s.return_data()
         self.assertTrue(isinstance(data, dict))
         self.assertEqual(data, dict())
-    
 
-if __name__ == '__main__': 
+
+if __name__ == '__main__':
     unittest.main()

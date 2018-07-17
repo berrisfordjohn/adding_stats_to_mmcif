@@ -3,10 +3,10 @@ from tests.access_test_files import TestFiles
 
 from adding_stats_to_mmcif.gemmi_cif_handling import mmcifHandling
 
+
 class TestGemmiCifHandling(unittest.TestCase):
 
     def setUp(self):
-
         self.test_files = TestFiles()
 
     def test_none_type(self):

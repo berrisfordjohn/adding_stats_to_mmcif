@@ -1,6 +1,7 @@
 import unittest
 from adding_stats_to_mmcif.get_data_from_pdbe_api import GetDataFromPdbeAPi, GetSpecificDataFromPdbeAPI
 
+
 class TestAddDataFromAimless(unittest.TestCase):
 
     def test_null_entry(self):
@@ -12,11 +13,13 @@ class TestAddDataFromAimless(unittest.TestCase):
         self.assertEqual(s, dict())
 
     def test_incorrect_server_within_api(self):
-        s = GetDataFromPdbeAPi(entry_id='ATP', end_point='compounds', server_root='https://www.ebi.ac.uk/pdbe/apiWRONG/').return_data()
+        s = GetDataFromPdbeAPi(entry_id='ATP', end_point='compounds',
+                               server_root='https://www.ebi.ac.uk/pdbe/apiWRONG/').return_data()
         self.assertEqual(s, dict())
 
     def test_incorrect_server_url(self):
-        s = GetDataFromPdbeAPi(entry_id='ATP', end_point='compounds', server_root='https://www.ebiWRONG.ac.uk/pdbe/api/').return_data()
+        s = GetDataFromPdbeAPi(entry_id='ATP', end_point='compounds',
+                               server_root='https://www.ebiWRONG.ac.uk/pdbe/api/').return_data()
         self.assertEqual(s, dict())
 
     def test_null_end_point(self):
@@ -30,7 +33,7 @@ class TestAddDataFromAimless(unittest.TestCase):
     def test_unknown_entry_id(self):
         s = GetDataFromPdbeAPi(entry_id='XXXXXXXXXXX', end_point='compounds').return_data()
         self.assertEqual(s, dict())
-    
+
     def test_known_entry_id(self):
         s = GetDataFromPdbeAPi(entry_id='ATP', end_point='compounds').return_data()
         self.assertNotEqual(s, dict())
@@ -58,6 +61,7 @@ class TestAddDataFromAimless(unittest.TestCase):
     def test_get_one_letter_code_for_None_ligand(self):
         s = GetSpecificDataFromPdbeAPI().get_one_letter_code_for_compound(compound=None)
         self.assertEqual(s, 'X')
+
 
 if __name__ == '__main__':
     unittest.main()

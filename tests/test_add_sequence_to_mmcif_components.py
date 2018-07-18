@@ -137,6 +137,7 @@ class TestAddDataToMmcif(unittest.TestCase):
         mm.process_input_sequences()
         best_seq, best_score = mm.get_best_match(mmcif_sequence=entity_dict['1']['sequence'])
         self.assertTrue(best_seq == expected_result)
+        self.assertTrue(best_score > 0)
 
 
 if __name__ == '__main__':

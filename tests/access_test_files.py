@@ -32,6 +32,17 @@ class TestFiles:
             'sequence': 'EKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR',
             'chains': ['A']}
 
+    def one_sequence_4hg7(self):
+        self.fasta = os.path.join(self.test_data, "0021-03_4hg7.seq")
+        self.cif = os.path.join(self.test_data, "deposition_refmac1.cif")
+        self.sample_seq = {
+            '4HG7:A|PDBID|CHAIN|SEQUENCE': 'GPLGSSQIPASEQETLVRPKPLLLKLLKSVGAQKDTYTMKEVLFYLGQYIMTKRLYDAAQQHIVYCSNDLLGDLFGVPSFSVKEHRKIYTMIYRNLV'}
+        self.sample_seq_to_obs_remapping = {'1': '4HG7:A|PDBID|CHAIN|SEQUENCE'}
+        self.observed_seq = dict()
+        self.observed_seq['1'] = {
+            'sequence': 'GPLGSSQIPASEQETLVRPKPLLLKLLKSVGAQKDTYTMKEVLFYLGQYIMTKRLYDAAQQHIVYCSNDLLGDLFGVPSFSVKEHRKIYTMIYRNLV',
+            'chains': ['AAA']}
+
     def four_chains_one_polymer(self):
         self.fasta = os.path.join(self.test_data, "four_chains_one_polymer.fasta")
         self.cif = os.path.join(self.test_data, "pdb6fqf_refmac1.cif")

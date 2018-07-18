@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from Bio.Alphabet import IUPAC
 import logging
 import argparse
 import os
@@ -21,12 +24,41 @@ class ProcessFasta:
             logging.debug('fasta file: {}'.format(self.fasta_file))
             if os.path.exists(self.fasta_file):
                 logging.debug('processing fasta file')
-                self.fasta_data = SeqIO.parse(self.fasta_file, "fasta")
-                for record in self.fasta_data:
-                    self.sequence_dict[record.id] = record.seq
+                try:
+                    self.fasta_data = SeqIO.parse(self.fasta_file, "fasta")
+                    for record in self.fasta_data:
+                        self.sequence_dict[record.id] = record.seq
+                    return True
+                except Exception as e:
+                    logging.error('exception in reading fasta')
+                    logging.error(e)
+        return False
 
     def get_sequence_dict(self):
         return self.sequence_dict
+
+    def write_fasta_file(self, sequence_dict):
+        if not isinstance(sequence_dict, dict):
+            logging.error('requires a dictionary')
+            return False
+        sequences = list()
+        if sequence_dict:
+            try:
+                for key in sequence_dict:
+                    record = SeqRecord(Seq(sequence_dict[key]), id=key)
+                    sequences.append(record)
+            except Exception as e:
+                logging.error('exception is creating seq record iterator')
+                logging.error(e)
+                return False
+            try:
+                with open(self.fasta_file, 'w') as output_handle:
+                    SeqIO.write(sequences, output_handle, "fasta")
+                return True
+            except Exception as e:
+                logging.error('exception in writing fasta file')
+                logging.error(e)
+        return False
 
 
 if __name__ == '__main__':

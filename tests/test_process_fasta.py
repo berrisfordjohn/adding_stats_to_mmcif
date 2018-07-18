@@ -1,4 +1,7 @@
 import unittest
+import tempfile
+import shutil
+import os
 from adding_stats_to_mmcif.process_fasta import ProcessFasta
 from tests.access_test_files import TestFiles
 
@@ -21,8 +24,9 @@ class TestProcessFasta(unittest.TestCase):
         self.assertEqual(data, dict())
 
     def test_valid_file_one_sequence(self):
-        expected_result = {'pdb|3zt9|A':'MEKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR'}
-        pf = ProcessFasta(fasta_file=self.test_files.TEST_VALID_FASTA_ONE_SEQUENCE)
+        self.test_files.one_sequence()
+        expected_result = self.test_files.sample_seq
+        pf = ProcessFasta(fasta_file=self.test_files.fasta)
         pf.process_fasta_file()
         data = pf.get_sequence_dict()
         self.assertTrue(len(data.keys()) == 1)
@@ -37,10 +41,9 @@ class TestProcessFasta(unittest.TestCase):
         self.assertEqual(data, dict())
 
     def test_valid_file_three_sequences(self):
-        expected_result = {'pdb|6db6|P': 'YNKRKRIHIGPGRAFYTTKNIIG',
-                           'pdb|6db6|H': 'QVQLVQSGAEVKKPGASVKISCKASGYNFTTYAMHWVRQAPGQGLEWMGWINGGNGDTRYSQKFRGRVTISRDTSASTAYMELHSLTSEDTALFYCARESGDYYSEISGALDWGQGTLVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKRVEPKSCDKTH',
-                           'pdb|6db6|L': 'SYELTQPPSVSVSPGQTARITCSGDVLPKKYAYWYQQKSGLAPVLVIYEDNRRPSGIPERFSGSSSGTMATLTISGAQVEDEGDYYCSSTDSSGDHYVFGTGTKVTVLGQPKANPSVTLFPPSSEELQANKATLVCLISDFYPGAVTVAWKADSSPVKAGVETTTPSKQSNNKYAASSYLSLTPEQWKSHRSYSCQVTHEGSTVEKTVAPTECS'}
-        pf = ProcessFasta(fasta_file=self.test_files.TEST_VALID_FASTA_THREE_SEQUENCES)
+        self.test_files.three_sequences()
+        expected_result = self.test_files.sample_seq
+        pf = ProcessFasta(fasta_file=self.test_files.fasta)
         pf.process_fasta_file()
         data = pf.get_sequence_dict()
         self.assertTrue(len(data.keys()) == 3)
@@ -49,18 +52,40 @@ class TestProcessFasta(unittest.TestCase):
             self.assertTrue(data[key] == expected_result[key])
 
     def test_valid_file_five_sequences(self):
-        expected_result = {'pdb|5l1z|B': 'MEGERKNNNKRWYFTREQLENSPSRRFGVDPDKELSYRQQAANLLQDMGQRLNVSQLTINTAIVYMHRFYMIQSFTQFPGNSVAPAALFLAAKVEEQPKKLEHVIKVAHTCLHPQESLPDTRSEAYLQQVQDLVILESIILQTLGFELTIDHPHTHVVKCTQLVRASKDLAQTSYFMATNSLHLTTFSLQYTPPVVACVCIHLACKWSNWEIPVSTDGKHWWEYVDATVTLELLDELTHEFLQILEKTPNRLKRIWNWRACEAA',
-                           'pdb|5l1z|D': 'XMEPVDPRLEPWKHPGSQPKTACTNCYCKKCCFHCQVCFITKALGISYGRKKRRQRRR',
-                           'pdb|5l1z|C': 'SPLFAEPYKVTSKEDKLSSRIQSMLGNYDEMKDFIG',
-                           'pdb|5l1z|A': 'MAKQYDSVECPFCDEVSKYEKLAKIGQGTFGEVFKARHRKTGQKVALKKVLMENEKEGFPITALREIKILQLLKHENVVNLIEICRTKASPYNRCKGSIYLVFDFCEHDLAGLLSNVLVKFTLSEIKRVMQMLLNGLYYIHRNKILHRDMKAANVLITRDGVLKLADFGLARAFSLAKNSQPNRYTNRVVTLWYRPPELLLGERDYGPPIDLWGAGCIMAEMWTRSPIMQGNTEQHQLALISQLCGSITPEVWPNVDNYELYEKLELVKGQKRKVKDRLKAYVRDPYALDLIDKLLVLDPAQRIDSDDALNHDFFWSDPMPSDLKGMLST',
-                           'pdb|5l1z|N': 'AGAUCUGAGCCUGGGAGCUCUCU'}
-        pf = ProcessFasta(fasta_file=self.test_files.TEST_VALID_FASTA_FIVE_SEQUENCES)
+        self.test_files.five_sequences()
+        expected_result = self.test_files.sample_seq
+        pf = ProcessFasta(fasta_file=self.test_files.fasta)
         pf.process_fasta_file()
         data = pf.get_sequence_dict()
         self.assertTrue(len(data.keys()) == 5)
         for key in data:
             self.assertTrue(key in expected_result)
             self.assertTrue(data[key] == expected_result[key])
+
+    def test_write_valid_fasta(self):
+        test = dict()
+        test[
+            'protein_a'] = 'MEGERKNNNKRWYFTREQLENSPSRRFGVDPDKELSYRQQAANLLQDMGQRLNVSQLTINTAIVYMHRFYMIQSFTQFPGNSVAPAALFLAAKVEEQPKKLEHVIKVAHTCLHPQESLPDTRSEAYLQQVQDLVILESIILQTLGFELTIDHPHTHVVKCTQLVRASKDLAQTSYFMATNSLHLTTFSLQYTPPVVACVCIHLACKWSNWEIPVSTDGKHWWEYVDATVTLELLDELTHEFLQILEKTPNRLKRIWNWRACEAA'
+        test['RNA'] = 'AGAUCUGAGCCUGGGAGCUCUCU'
+        temp_dir = tempfile.mkdtemp()
+        output_fasta = os.path.join(temp_dir, 'output.fasta')
+        pf = ProcessFasta(fasta_file=output_fasta)
+        worked = pf.write_fasta_file(sequence_dict=test)
+        self.assertTrue(worked)
+        self.assertTrue(os.path.exists(output_fasta))
+
+        shutil.rmtree(temp_dir)
+
+    def test_write_invalid_fasta(self):
+        test = []
+        temp_dir = tempfile.mkdtemp()
+        output_fasta = os.path.join(temp_dir, 'output.fasta')
+        pf = ProcessFasta(fasta_file=output_fasta)
+        worked = pf.write_fasta_file(sequence_dict=test)
+        self.assertFalse(worked)
+        self.assertFalse(os.path.exists(output_fasta))
+
+        shutil.rmtree(temp_dir)
 
 
 if __name__ == '__main__':

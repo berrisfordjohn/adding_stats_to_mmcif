@@ -50,7 +50,7 @@ class SequenceAlign:
         # return True, ''
 
     def remove_gaps(self, sequence):
-        return sequence.replace("\n", "").replace(" ", "")
+        return str(sequence).replace("\n", "").replace(" ", "")
 
     def prepare_sequences(self):
         self.sequence1 = self.remove_gaps(self.sequence1)

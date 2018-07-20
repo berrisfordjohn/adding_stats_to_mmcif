@@ -23,14 +23,14 @@ class TestFiles:
 
     def one_sequence(self):
         self.fasta = os.path.join(self.test_data, "one_chain.fasta")
-        self.cif = os.path.join(self.test_data, "valid.cif")
+        self.cif = os.path.join(self.test_data, "pdb3zt9_refmac1.cif")
         self.sample_seq = {
             'pdb|3zt9|A': 'MEKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR'}
         self.sample_seq_to_obs_remapping = {'1': 'pdb|3zt9|A'}
         self.observed_seq = dict()
         self.observed_seq['1'] = {
             'sequence': 'EKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR',
-            'chains': ['A']}
+            'chains': ['AAA']}
 
     def one_sequence_4hg7(self):
         self.fasta = os.path.join(self.test_data, "0021-03_4hg7.seq")

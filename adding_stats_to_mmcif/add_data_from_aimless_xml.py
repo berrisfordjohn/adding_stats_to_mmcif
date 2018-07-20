@@ -3,6 +3,7 @@ from .aimless_xml_parser import aimlessReport
 from .cif_handling import mmcifHandling
 import argparse
 import logging
+import os
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
@@ -18,20 +19,24 @@ def get_xml_data(xml_file):
     return xml_data, software_row
 
 
-def main(xml_file, input_cif, output_cif):
+def run_process(xml_file, input_cif, output_cif):
     xml_data, software_row = get_xml_data(xml_file=xml_file)
     if xml_data:
         # if there is data from the XML file then add this to the mmCIF file
-        pc = mmcifHandling(fileName=input_cif)
-        pc.parse_mmcif()
-        # add aimless data to the mmCIF file
-        pc.addToCif(data_dictionary=xml_data)
-        # update the software list in the mmCIF file to add aimless
-        software_cat = pc.addValuesToCategory(category='software', item_value_dictionary=software_row,
-                                              ordinal_item='pdbx_ordinal')
-        pc.addToCif(data_dictionary=software_cat)
-        # write out the resulting mmCIF file.
-        pc.writeCif(fileName=output_cif)
+        if os.path.exists(input_cif):
+            pc = mmcifHandling(fileName=input_cif)
+            pc.parse_mmcif()
+            # add aimless data to the mmCIF file
+            pc.addToCif(data_dictionary=xml_data)
+            # update the software list in the mmCIF file to add aimless
+            software_cat = pc.addValuesToCategory(category='software', item_value_dictionary=software_row,
+                                                  ordinal_item='pdbx_ordinal')
+            pc.addToCif(data_dictionary=software_cat)
+            # write out the resulting mmCIF file.
+            pc.writeCif(fileName=output_cif)
+            if os.path.exists(output_cif):
+                return True
+    return False
 
 
 if __name__ == '__main__':
@@ -46,4 +51,4 @@ if __name__ == '__main__':
 
     logger.setLevel(args.loglevel)
 
-    main(xml_file=args.xml_file, input_cif=args.input_mmcif, output_cif=args.output_mmcif)
+    run_process(xml_file=args.xml_file, input_cif=args.input_mmcif, output_cif=args.output_mmcif)

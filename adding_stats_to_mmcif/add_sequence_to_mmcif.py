@@ -251,34 +251,19 @@ class AddSequenceToMmcif:
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    #parser.add_argument('--output_mmcif', help='output mmcif file', type=str, required=True)
-    #parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)
-    #parser.add_argument('--fasta_file', help='input fasta file', type=str)
-    #parser.add_argument('--sequence', help='input sequence in one letter format', type=str)
-    #parser.add_argument('--chain_ids', help='input chain ids in a comma separated list', type=str)
+    parser.add_argument('--output_mmcif', help='output mmcif file', type=str, required=True)
+    parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)
+    parser.add_argument('--fasta_file', help='input fasta file', type=str)
+    parser.add_argument('--sequence', help='input sequence in one letter format', type=str)
+    parser.add_argument('--chain_ids', help='input chain ids in a comma separated list', type=str)
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,
                         default=logging.INFO)
 
     args = parser.parse_args()
     logger.setLevel(args.loglevel)
 
-    #worked = AddSequenceToMmcif(input_mmcif=args.input_mmcif,
-    #                            output_mmcif=args.output_mmcif,
-    #                            fasta_file=args.fasta_file,
-    #                            input_sequence=args.sequence,
-    #                            input_chainids=args.chain_ids).process_data()
-
-    from tests.access_test_files import TestFiles
-
-    expected_result = 'MEKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR'
-    entity_dict = dict()
-    entity_dict['1'] = {
-        'sequence': 'EKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR',
-        'chains': ['A']}
-    mm = AddSequenceToMmcif(input_mmcif=TestFiles().TEST_VALID_MMCIF_FILE,
-                            output_mmcif='output.cif',
-                            fasta_file=TestFiles().TEST_VALID_FASTA_ONE_SEQUENCE)
-    mm.process_input_sequences()
-    print(mm.input_sequence_dict)
-    best_seq, best_score = mm.get_best_match(mmcif_sequence=entity_dict['1']['sequence'])
-    print('{} {}'.format(best_seq, best_score))
+    worked = AddSequenceToMmcif(input_mmcif=args.input_mmcif,
+                                output_mmcif=args.output_mmcif,
+                                fasta_file=args.fasta_file,
+                                input_sequence=args.sequence,
+                                input_chainids=args.chain_ids).process_data()

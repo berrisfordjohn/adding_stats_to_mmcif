@@ -112,6 +112,15 @@ class TestSeqAlign(unittest.TestCase):
             s = sa.do_sequences_align()
             self.assertFalse(s)
 
+    def test_align_protein_protein_get_score(self):
+
+        sequence_length = len(protein_DNA_RNA[0])
+        sa = SequenceAlign(sequence1=protein_DNA_RNA[0], sequence2=protein_DNA_RNA[0])
+        aligned, error, score = sa.do_sequence_alignment()
+        score = sa.get_alignment_score()
+        self.assertTrue(aligned)
+        self.assertTrue(score == sequence_length)
+
     def test_align_protein_protein(self):
 
         sa = SequenceAlign(sequence1=protein_DNA_RNA[0], sequence2=protein_DNA_RNA[0])

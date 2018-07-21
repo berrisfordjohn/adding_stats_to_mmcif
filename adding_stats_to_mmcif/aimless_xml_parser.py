@@ -71,6 +71,15 @@ class aimlessReport:
         self.stats_dict.setdefault(self.cif_cat, {}).setdefault(self.cif_item, [''] * self.number_of_values)[
             instance] = value
 
+    def split_on_separator(self, separator, value_to_split):
+        logging.debug('separator: "%s"' % separator)
+        if separator == ' ':
+            value_list = value_to_split.text.split()
+        else:
+            value_list = value_to_split.text.split(separator)
+        logging.debug(value_list)
+        return value_list
+
     def get_data(self):
         """
         :return: statistics dictionary from Dataset XML tag.
@@ -120,12 +129,8 @@ class aimlessReport:
                     # need to set cif category based on the table name.
                     cif_cat = table_keys[table.attrib['id']]
                     headers = table.find('headers')
-                    separator = headers.attrib['separator']
-                    logging.debug('separator: "%s"' % separator)
-                    if separator == ' ':
-                        header_list = headers.text.split()
-                    else:
-                        header_list = headers.text.split(separator)
+                    header_list = self.split_on_separator(separator=headers.attrib['separator'],
+                                                          value_to_split=headers.text)
                     data = table.find('data').text
                     logging.debug(data)
                     data_lines = data.strip().split('\n')
@@ -133,11 +138,7 @@ class aimlessReport:
                     number_of_data_values = len(data_lines)
                     logging.debug('number of data items: %s' % number_of_data_values)
                     for instance, d in enumerate(data_lines):
-                        if separator == ' ':
-                            d = d.strip().split()
-                        else:
-                            d = d.strip().split(separator)
-                        logging.debug(d)
+                        d = self.split_on_separator(separator=headers.attrib['separator'], value_to_split=d)
                         for header_pos, item in enumerate(header_list):
                             logging.debug('%s - position %s' % (item, header_pos))
                             value = d[header_pos]

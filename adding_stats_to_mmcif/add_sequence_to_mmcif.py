@@ -45,7 +45,14 @@ class ExtractFromMmcif():
         parsed = self.mm.parse_mmcif()
         return parsed
 
-    def get_non_standard_one_letter(self, threeLetter):
+    def get_one_letter_code(self, three_letter):
+        if three_letter in residue_map_3to1:
+            one_letter = residue_map_3to1[three_letter]
+        else:
+            one_letter = self.get_non_standard_one_letter(three_letter=three_letter)
+        return one_letter
+
+    def get_non_standard_one_letter(self, three_letter):
         """
         Return the one letter code for a non standard residue.
         Checks the cache and then the PDBe API for the one letter code for a residue
@@ -53,12 +60,12 @@ class ExtractFromMmcif():
         threeLetter = non standard residue three letter code
         returns the one letter code
         """
-        if threeLetter in self.non_standard_residue_mapping:
-            oneLetter = self.non_standard_residue_mapping[threeLetter]
+        if three_letter in self.non_standard_residue_mapping:
+            one_letter = self.non_standard_residue_mapping[three_letter]
         else:
-            oneLetter = GetSpecificDataFromPdbeAPI().get_one_letter_code_for_compound(compound=threeLetter)
-            self.non_standard_residue_mapping[threeLetter] = oneLetter
-        return oneLetter
+            one_letter = GetSpecificDataFromPdbeAPI().get_one_letter_code_for_compound(compound=three_letter)
+            self.non_standard_residue_mapping[three_letter] = one_letter
+        return one_letter
 
     def get_seq_of_polymer_entities(self):
         internal_dict = dict()
@@ -71,10 +78,7 @@ class ExtractFromMmcif():
                 num = row['num']
                 hetero = row['hetero']
 
-                if three_letter in residue_map_3to1:
-                    one_letter = residue_map_3to1[three_letter]
-                else:
-                    one_letter = self.get_non_standard_one_letter(threeLetter=three_letter)
+                one_letter = self.get_one_letter_code(three_letter=three_letter)
                 # if hetero == 'n': # hetero is used for a heterogen instead of microhet in refmac.
                 internal_dict.setdefault(entity_id, []).append(one_letter)
 
@@ -98,10 +102,7 @@ class ExtractFromMmcif():
                 ins_code = row['pdbx_PDB_ins_code']
                 group_PDB = row['group_PDB']
 
-                if three_letter in residue_map_3to1:
-                    one_letter = residue_map_3to1[three_letter]
-                else:
-                    one_letter = self.get_non_standard_one_letter(threeLetter=three_letter)
+                one_letter = self.get_one_letter_code(three_letter=three_letter)
 
                 # logging.debug('{} {}{} {}'.format(entity_id, chain_id, residue_number, one_letter))
                 atom_site_dict.setdefault(entity_id, {}).setdefault(chain_id, [])
@@ -249,7 +250,6 @@ class AddSequenceToMmcif:
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--output_mmcif', help='output mmcif file', type=str, required=True)
     parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)

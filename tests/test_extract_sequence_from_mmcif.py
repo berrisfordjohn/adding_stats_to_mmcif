@@ -20,22 +20,22 @@ class TestGetDataFromMmcif(unittest.TestCase):
 
     def test_get_non_standard_one_letter_ALA(self):
         mm = ExtractFromMmcif(mmcif_file=self.test_files.TEST_VALID_MMCIF_FILE)
-        one_letter = mm.get_non_standard_one_letter(threeLetter='ALA')
+        one_letter = mm.get_non_standard_one_letter(three_letter='ALA')
         self.assertTrue(one_letter == 'A')
 
     def test_get_non_standard_one_letter_TPO(self):
         mm = ExtractFromMmcif(mmcif_file=self.test_files.TEST_VALID_MMCIF_FILE)
-        one_letter = mm.get_non_standard_one_letter(threeLetter='TPO')
+        one_letter = mm.get_non_standard_one_letter(three_letter='TPO')
         self.assertTrue(one_letter == 'T')
 
     def test_get_non_standard_one_letter_SEP(self):
         mm = ExtractFromMmcif(mmcif_file=self.test_files.TEST_VALID_MMCIF_FILE)
-        one_letter = mm.get_non_standard_one_letter(threeLetter='SEP')
+        one_letter = mm.get_non_standard_one_letter(three_letter='SEP')
         self.assertTrue(one_letter == 'S')
 
     def test_get_non_standard_one_letter_MAN(self):
         mm = ExtractFromMmcif(mmcif_file=self.test_files.TEST_VALID_MMCIF_FILE)
-        one_letter = mm.get_non_standard_one_letter(threeLetter='MAN')
+        one_letter = mm.get_non_standard_one_letter(three_letter='MAN')
         self.assertTrue(one_letter == 'X')
 
     def test_get_data_from_3zt9(self):

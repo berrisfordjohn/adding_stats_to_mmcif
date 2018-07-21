@@ -48,6 +48,9 @@ class aimlessReport:
         self.tree = None
         self.root = None
         self.stats_dict = dict()
+        self.cif_item = None
+        self.cif_cat = None
+        self.number_of_values = 0
 
     def parse_xml(self):
         """
@@ -64,6 +67,10 @@ class aimlessReport:
                 return True
         return False
 
+    def add_data_to_stats_dict(self, instance, value):
+        self.stats_dict.setdefault(self.cif_cat, {}).setdefault(self.cif_item, [''] * self.number_of_values)[
+            instance] = value
+
     def get_data(self):
         """
         :return: statistics dictionary from Dataset XML tag.
@@ -72,15 +79,15 @@ class aimlessReport:
         data_set_counter = 0
         for datasetresultnode in datasetresultnodes:
             data_set_counter += 1
-            for cif_cat in stats_remap:
+            for self.cif_cat in stats_remap:
 
-                location_list = stats_remap[cif_cat]['pos_list']
-                number_of_values = len(location_list)
+                location_list = stats_remap[self.cif_cat]['pos_list']
+                self.number_of_values = len(location_list)
 
                 for instance, location in enumerate(location_list):
-                    for cif_item in stats_remap[cif_cat]['cif_to_xml']:
-                        logging.debug(cif_item)
-                        xml_item = stats_remap[cif_cat]['cif_to_xml'][cif_item]
+                    for self.cif_item in stats_remap[self.cif_cat]['cif_to_xml']:
+                        logging.debug(self.cif_item)
+                        xml_item = stats_remap[self.cif_cat]['cif_to_xml'][self.cif_item]
 
                         xml_node = datasetresultnode.find(xml_item)
                         xml_item_for_location = xml_node.find(location)
@@ -89,15 +96,14 @@ class aimlessReport:
                         xml_value = xml_item_for_location.text.strip()
                         logging.debug(xml_value)
 
-                        self.stats_dict.setdefault(cif_cat, {}).setdefault(cif_item, [''] * number_of_values)[
-                            instance] = xml_value
-                    for cif_item in extra_cif_items:
-                        if extra_cif_items[cif_item]:
-                            value = extra_cif_items[cif_item]
+                        self.add_data_to_stats_dict(instance=instance, value=xml_value)
+
+                    for self.cif_item in extra_cif_items:
+                        if extra_cif_items[self.cif_item]:
+                            value = extra_cif_items[self.cif_item]
                         else:
                             value = instance + 1
-                        self.stats_dict.setdefault(cif_cat, {}).setdefault(cif_item, [''] * number_of_values)[
-                            instance] = str(value)
+                        self.add_data_to_stats_dict(instance=instance, value=str(value))
 
         return self.stats_dict
 

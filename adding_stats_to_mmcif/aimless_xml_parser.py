@@ -127,7 +127,7 @@ class aimlessReport:
             if 'id' in table.attrib:
                 if table.attrib['id'] in table_keys:
                     # need to set cif category based on the table name.
-                    cif_cat = table_keys[table.attrib['id']]
+                    self.cif_cat = table_keys[table.attrib['id']]
                     headers = table.find('headers')
                     header_list = self.split_on_separator(separator=headers.attrib['separator'],
                                                           value_to_split=headers.text)
@@ -139,11 +139,11 @@ class aimlessReport:
                     logging.debug('number of data items: %s' % number_of_data_values)
                     for instance, d in enumerate(data_lines):
                         d = self.split_on_separator(separator=headers.attrib['separator'], value_to_split=d)
-                        for header_pos, item in enumerate(header_list):
-                            logging.debug('%s - position %s' % (item, header_pos))
+                        for header_pos, self.cif_item in enumerate(header_list):
+                            logging.debug('%s - position %s' % (self.cif_item, header_pos))
                             value = d[header_pos]
-                            self.stats_dict.setdefault(cif_cat, {}).setdefault(item, [''] * number_of_data_values)[
-                                instance] = value
+                            self.add_data_to_stats_dict(instance=instance, value=value)
+
         return self.stats_dict
 
     def return_data(self):

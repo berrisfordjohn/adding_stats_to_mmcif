@@ -47,6 +47,20 @@ class mmcifHandling:
     def writeCif(self, fileName):
         self.cif_handling.writeCif(fileName=fileName)
 
+    def addExptlToCif(self, method='X-RAY DIFFRACTION'):
+        entry_id = ''
+        entry_ids = self.getCatItemValues(category='entry', item='id')
+        if entry_ids:
+            for entry in entry_ids:
+                entry_id = entry
+        cat = 'exptl'
+        exptl_cat = self.getCategory(category=cat)
+        if not exptl_cat:
+            row = {'entry_id': entry_id, 'method': method}
+            exptl_cat = self.addValuesToCategory(category=cat, item_value_dictionary=row)
+            self.addToCif(data_dictionary=exptl_cat)
+        return exptl_cat
+
 
 if __name__ == '__main__':
 

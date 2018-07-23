@@ -32,6 +32,8 @@ def run_process(xml_file, input_cif, output_cif):
             software_cat = pc.addValuesToCategory(category='software', item_value_dictionary=software_row,
                                                   ordinal_item='pdbx_ordinal')
             pc.addToCif(data_dictionary=software_cat)
+            # add exptl data
+            pc.addExptlToCif()
             # write out the resulting mmCIF file.
             pc.writeCif(fileName=output_cif)
             if os.path.exists(output_cif):

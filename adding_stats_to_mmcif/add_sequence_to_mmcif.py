@@ -129,6 +129,12 @@ class ExtractFromMmcif():
                                                     ordinal_item=ordinal)
         self.mm.addToCif(category_dict)
 
+    def add_exptl(self):
+        exptl_data = self.mm.addExptlToCif()
+        if exptl_data:
+            return True
+        return False
+
     def write_mmcif(self, filename):
         self.mm.writeCif(fileName=filename)
 
@@ -219,6 +225,7 @@ class AddSequenceToMmcif:
             mmcif_dict = {'entity_poly': mmcif_out}
             # self.mmcif.remove_category(category='entity_poly')
             self.add_to_mmcif(mmcif_dict=mmcif_dict)
+            self.add_exptl()
             self.mmcif.write_mmcif(filename=self.output_cif)
             if os.path.exists(self.output_cif):
                 return True
@@ -232,6 +239,9 @@ class AddSequenceToMmcif:
             for row in mmcif_dict[cat]:
                 logging.debug(row)
                 self.mmcif.add_to_mmcif(category=cat, item_value_dict=row)
+
+    def add_exptl(self):
+        return self.mmcif.add_exptl()
 
     def process_data(self):
         self.process_input_sequences()

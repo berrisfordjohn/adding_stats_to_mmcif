@@ -21,6 +21,8 @@ class TestFiles:
         self.observed_seq = None
         self.sample_seq_to_obs_remapping = None
         self.exptl_data = None
+        self.test_output_file = None
+        self.structure_factor = None
 
     def one_sequence(self):
         self.fasta = os.path.join(self.test_data, "one_chain.fasta")
@@ -33,6 +35,8 @@ class TestFiles:
             'sequence': 'EKLEVGIYTRAREGEIACGDACLVKRVEGVIFLAVGDGIGHGPEAARAAEIAIASMESSMNTGLVNIFQLCHRELRGTRGAVAALCRVDRRQGLWQAAIVGNIHVKILSAKGIITPLATPGILGYNYPHQLLIAKGSYQEGDLFLIHSDGIQEGAVPLALLANYRLTAEELVRLIGEKYGRRDDDVAVIVAR',
             'chains': ['AAA']}
         self.exptl_data = {'_exptl.': {'entry_id': ['3ZT9'], 'method': ['X-RAY DIFFRACTION']}}
+        self.test_output_file = os.path.join(self.test_data, "pdb3zt9_refmac1_output.cif")
+        self.structure_factor = os.path.join(self.test_data, 'r3zt9sf.ent')
 
     def one_sequence_4hg7(self):
         self.fasta = os.path.join(self.test_data, "0021-03_4hg7.seq")

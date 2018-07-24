@@ -59,6 +59,7 @@ class TestFiles:
         self.observed_seq['1'] = {
             'sequence': 'VHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH',
             'chains': ['AAA', 'BBB', 'CCC', 'DDD']}
+        self.structure_factor = os.path.join(self.test_data, 'r6fqfsf.ent')
 
     def three_sequences(self):
         self.fasta = os.path.join(self.test_data, "three_chains.fasta")
@@ -79,6 +80,7 @@ class TestFiles:
         self.observed_seq['2'] = {
             'sequence': 'SYELTQPPSVSVSPGQTARITCSGDVLPKKYAYWYQQKSGLAPVLVIYEDNRRPSGIPERFSGSSSGTMATLTISGAQVEDEGDYYCSSTDSSGDHYVFGTGTKVTVLGQPKANPSVTLFPPSSEELQANKATLVCLISDFYPGAVTVAWKADSSPVKAGVETTTPSKQSNNKYAASSYLSLTPEQWKSHRSYSCQVTHEGSTVEKTVAPTECS',
             'chains': ['LLL']}
+        self.structure_factor = os.path.join(self.test_data, 'r6bd6sf.ent')
 
     def five_sequences(self):
         self.fasta = os.path.join(self.test_data, "five_chains.fasta")
@@ -108,3 +110,4 @@ class TestFiles:
             'chains': ['AAA']}
         self.observed_seq['6'] = {'sequence': 'GAUCUGAGCCUGGGAGCUCUC',
                                   'chains': ['NNN']}
+        self.structure_factor = os.path.join(self.test_data, 'r5l1zsf.ent')

@@ -6,7 +6,7 @@ typical usage
 
 ### INPUT: Aimless XML file, Any STAR/CIF/mmCIF file, OUTPUT: updated cifFile
 ```python
-from adding_stats_to_mmcif.adding_sequence_and_statistics_to_mmcif import run_process
+from adding_stats_to_mmcif import run_process
 
 aimless_xml_file = 'input.xml'
 fasta_sequence_file = 'sequence.fasta'

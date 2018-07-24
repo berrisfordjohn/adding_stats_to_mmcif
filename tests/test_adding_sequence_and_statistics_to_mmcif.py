@@ -4,7 +4,7 @@ import tempfile
 import os
 import shutil
 
-from adding_stats_to_mmcif.adding_sequence_and_statistics_to_mmcif import run_process
+from adding_stats_to_mmcif import run_process
 
 
 class TestWholeProcess(unittest.TestCase):

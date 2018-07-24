@@ -78,7 +78,7 @@ def run_validation_api(model_file_path, sf_file_path, output_file_name, api_inpu
     return False, file_name_of_logfile
 
 
-if '__main__' == __name__:
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_mmcif', help='input mmcif model file', type=str, required=True)
     parser.add_argument('--input_sf_file', help='input sf file', type=str, required=True)

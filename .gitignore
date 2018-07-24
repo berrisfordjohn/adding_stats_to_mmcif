@@ -19,3 +19,6 @@ htmlcov/*
 ignore_*
 out.cif
 
+# wwpdb_validation test
+tests/test_wwpdb_validation_api
+

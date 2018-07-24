@@ -39,6 +39,18 @@ extra_cif_items = {'pdbx_ordinal': ''}
 table_keys = {'deposition': 'reflns'}
 
 
+def split_on_separator(separator, value_to_split):
+    value_list = list()
+    logging.debug('separator: "%s"' % separator)
+    if separator:
+        if separator == ' ':
+            value_list = value_to_split.split()
+        else:
+            value_list = value_to_split.split(separator)
+        logging.debug(value_list)
+    return value_list
+
+
 class aimlessReport:
     def __init__(self, xml_file):
         """
@@ -70,15 +82,6 @@ class aimlessReport:
     def add_data_to_stats_dict(self, instance, value):
         self.stats_dict.setdefault(self.cif_cat, {}).setdefault(self.cif_item, [''] * self.number_of_values)[
             instance] = value
-
-    def split_on_separator(self, separator, value_to_split):
-        logging.debug('separator: "%s"' % separator)
-        if separator == ' ':
-            value_list = value_to_split.text.split()
-        else:
-            value_list = value_to_split.text.split(separator)
-        logging.debug(value_list)
-        return value_list
 
     def get_data(self):
         """
@@ -129,8 +132,8 @@ class aimlessReport:
                     # need to set cif category based on the table name.
                     self.cif_cat = table_keys[table.attrib['id']]
                     headers = table.find('headers')
-                    header_list = self.split_on_separator(separator=headers.attrib['separator'],
-                                                          value_to_split=headers.text)
+                    header_list = split_on_separator(separator=headers.attrib['separator'].text,
+                                                     value_to_split=headers.text)
                     data = table.find('data').text
                     logging.debug(data)
                     data_lines = data.strip().split('\n')
@@ -138,7 +141,7 @@ class aimlessReport:
                     number_of_data_values = len(data_lines)
                     logging.debug('number of data items: %s' % number_of_data_values)
                     for instance, d in enumerate(data_lines):
-                        d = self.split_on_separator(separator=headers.attrib['separator'], value_to_split=d)
+                        d = split_on_separator(separator=headers.attrib['separator'].text, value_to_split=d)
                         for header_pos, self.cif_item in enumerate(header_list):
                             logging.debug('%s - position %s' % (self.cif_item, header_pos))
                             value = d[header_pos]

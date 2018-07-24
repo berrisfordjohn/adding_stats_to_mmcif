@@ -1,7 +1,7 @@
 import unittest
 from tests.access_test_files import TestFiles
 
-from adding_stats_to_mmcif.aimless_xml_parser import aimlessReport
+from adding_stats_to_mmcif.aimless_xml_parser import aimlessReport, split_on_separator
 
 
 class TestAimlessReportGeneration(unittest.TestCase):
@@ -56,6 +56,19 @@ class TestAimlessReportGeneration(unittest.TestCase):
         data = s.return_data()
         self.assertTrue(isinstance(data, dict))
         self.assertEqual(data, dict())
+
+    def test_split_separator(self):
+        value_to_split = 'the quick brown fox'
+        data = split_on_separator(separator=' ', value_to_split=value_to_split)
+        self.assertTrue(data == value_to_split.split(' '))
+        value_to_split_comma = 'the,quick,brown,fox'
+        data = split_on_separator(separator=',', value_to_split=value_to_split_comma)
+        self.assertTrue(data == value_to_split_comma.split(','))
+        data = split_on_separator(separator=None, value_to_split=value_to_split)
+        self.assertTrue(data == list())
+        value_to_split_T = 'theTquickTbrownTfox'
+        data = split_on_separator(separator='T', value_to_split=value_to_split_T)
+        self.assertTrue(data == value_to_split_T.split('T'))
 
 
 if __name__ == '__main__':

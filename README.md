@@ -1,32 +1,25 @@
 # adding_stats_to_mmcif
 
-Adds data to an mmCIF file from aimless XML file.
-
-Requires https://github.com/glenveegee/PDBeCIF
-or another mmCIF parser defined in cif_handling.py
+Adds sequence and scaling data to an mmCIF file in preparation for submission to the wwPDB deposition system.
 
 typical usage
 
 ### INPUT: Aimless XML file, Any STAR/CIF/mmCIF file, OUTPUT: updated cifFile
 ```python
-import adding_stats_to_mmcif.aimless_xml_parser as aimless_xml_parser
-import adding_stats_to_mmcif.cif_handling as cif_handling
+from adding_stats_to_mmcif.adding_sequence_and_statistics_to_mmcif import run_process
 
-xml_file = 'input.xml'
+aimless_xml_file = 'input.xml'
+fasta_sequence_file = 'sequence.fasta'
 input_mmcif = 'input.cif'
 output_mmcif = 'output.cif'
-
-ar = aimless_xml_parser.aimlessReport(xml_file=xml_file)
-xml_data = ar.return_data()
-if xml_data:
-    pc = cif_handling.mmcifHandling(fileName=input_mmcif)
-    pc.parse_mmcif()
-    pc.addToCif(data_dictionary=xml_data)
-    pc.writeCif(fileName=output_mmcif)
+worked = run_process(input_mmcif=input_mmcif, output_mmcif=output_mmcif,
+                             fasta_file=fasta_sequence_file,
+                             xml_file=aimless_xml_file)
 ```
 where
-xml_file is an aimless XML file
-input_cif is an existing mmCIF file
+aimless_xml_file is the ouput XML file from Aimless
+input_cif is an existing mmCIF file from Refmac
+fasta_sequence_file is a fasta file containing the sequence of the polymers in Fasta format
 output_cif is the output modified mmCIF file which data from the aimless XML file.
 
 [![Build Status](https://travis-ci.org/berrisfordjohn/adding_stats_to_mmcif.svg?branch=master)](https://travis-ci.org/berrisfordjohn/adding_stats_to_mmcif)

@@ -22,7 +22,7 @@ def display_status(sD, exitOnError=True):
             logging.info("OneDep status: %s\n" % sD['status'])
 
 
-def main(model_file_path, sf_file_path, output_file_name, api_input_url=None):
+def run_validation_api(model_file_path, sf_file_path, output_file_name, api_input_url=None):
     # Given:
     # modelFilePath contains the path to the model file
     # sfFilePath contains the path to the structure factor file
@@ -67,6 +67,7 @@ def main(model_file_path, sf_file_path, output_file_name, api_input_url=None):
         display_status(ret)
         logging.debug('getting report status: {}'.format(ret))
         if os.path.exists(output_file_name):
+            shutil.rmtree(temp_output_dir)
             return True, output_file_name
     else:
         logging.error('validation run status: {}'.format(val_status))
@@ -90,7 +91,7 @@ if '__main__' == __name__:
 
     logger.setLevel(args.loglevel)
 
-    worked, report = main(sf_file_path=args.input_sf_file, model_file_path=args.input_mmcif,
-                          output_file_name=args.output_file_name, api_input_url=args.api_url)
+    worked, report = run_validation_api(sf_file_path=args.input_sf_file, model_file_path=args.input_mmcif,
+                                        output_file_name=args.output_file_name, api_input_url=args.api_url)
     logging.info('worked: {}'.format(worked))
     logging.info(report)

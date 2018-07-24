@@ -11,6 +11,6 @@ setup(
     # dependency_links=['https://github.com/project-gemmi/gemmi/tarball/master#egg=gemmi'],
     install_requires=['biopython>=1.72',
                       'requests',
-                      # 'onedep_api'
+                      'onedep_api>=0.15'
                       ],
 )

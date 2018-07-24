@@ -2,6 +2,7 @@ import unittest
 from tests.access_test_files import TestFiles
 from adding_stats_to_mmcif.add_sequence_to_mmcif import AddSequenceToMmcif
 import tempfile
+import shutil
 import os
 
 
@@ -97,12 +98,14 @@ class TestAddDataToMmcif(unittest.TestCase):
 
     def test_get_data_from_3zt9_via_AddSequenceToMmcif_process_data(self):
         self.test_files.one_sequence()
+        test_dir = tempfile.mkdtemp()
+        output_cif = os.path.join(test_dir, 'output.cif')
         mm = AddSequenceToMmcif(input_mmcif=self.test_files.cif,
-                                output_mmcif='output.cif',
+                                output_mmcif=output_cif,
                                 fasta_file=self.test_files.fasta)
-        entity_dict = self.test_files.observed_seq
         worked = mm.process_data()
         self.assertTrue(worked)
+        shutil.rmtree(test_dir)
 
     def test_get_data_from_3zt9_via_AddSequenceToMmcif_get_best_match(self):
         self.test_files.one_sequence()

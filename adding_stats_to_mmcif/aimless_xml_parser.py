@@ -74,7 +74,7 @@ class aimlessReport:
             self.root = parse_xml(xml_file=self.xml_file)
 
         if self.root is not None:
-            if self.root.tag == 'AIMLESS_PIPE':
+            if self.root.tag == 'AIMLESS_PIPE' or self.root.tag == 'AIMLESS':
                 logging.debug('is an aimless xml file')
                 return True
         return False

@@ -4,6 +4,7 @@ import pprint
 import os
 import argparse
 from .xml_parsing import parse_xml
+from .mmcif_dictionary_handling import SoftwareClassification
 
 logger = logging.getLogger()
 
@@ -177,11 +178,7 @@ class aimlessReport:
 
     def get_aimless_version_dict(self):
         version = self.get_aimlesss_version()
-        software_row = dict()
-        software_row['name'] = 'Aimless'
-        software_row['classification'] = 'data scaling'
-        if version:
-            software_row['version'] = str(version)
+        software_row = SoftwareClassification().get_software_row(software_name='aimless', version=version)
 
         return software_row
 

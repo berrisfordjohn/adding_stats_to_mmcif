@@ -40,7 +40,7 @@ class TestAddDataFromAimless(unittest.TestCase):
 
     def test_known_lower_case_entry_id(self):
         s = GetDataFromPdbeAPi(entry_id='atp', end_point='compounds').return_data()
-        self.assertEqual(s, dict())
+        self.assertNotEqual(s, dict())
 
     def test_get_one_letter_code_for_tpo(self):
         s = GetSpecificDataFromPdbeAPI().get_one_letter_code_for_compound(compound='TPO')

@@ -39,6 +39,7 @@ class GetDataFromPdbeAPi:
             try:
                 self.encode_url()
 
+                """
                 s = requests.Session()  # start a requests session
                 retries = Retry(total=5,  # number of retries
                                 backoff_factor=1.0,
@@ -47,8 +48,9 @@ class GetDataFromPdbeAPi:
                 s.mount('http://', HTTPAdapter(max_retries=retries))  # retry for these protocols.
                 s.mount('https://', HTTPAdapter(max_retries=retries))
 
-                r = s.get(url=self.url, timeout=60)
-                # r = requests.get(url=self.url, timeout=60)
+                r = s.get(url=self.url, timeout=5)
+                """
+                r = requests.get(url=self.url, timeout=5)
 
                 if r.status_code == 200:
                     json_data = r.json()

@@ -26,7 +26,7 @@ residue_map_3to1['T'] = 'T'
 residue_map_3to1['U'] = 'U'
 
 
-class ExtractFromMmcif():
+class ExtractFromMmcif:
 
     def __init__(self, mmcif_file):
         self.mmcif_file = mmcif_file

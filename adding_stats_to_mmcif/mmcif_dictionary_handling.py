@@ -10,7 +10,7 @@ class SoftwareClassification:
         self.get_software_data()
 
     def get_software_data(self):
-        software_json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),'software_classification.json')
+        software_json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'software_classification.json')
         if not self.software_dictionary:
             if os.path.exists(software_json_file):
                 with open(software_json_file) as json_file:
@@ -39,15 +39,17 @@ class SoftwareClassification:
             classification = self.software_dictionary[software_name_correct_case].split(',')
         return classification
 
-    def get_software_row(self, software_name, version=None):
+    def get_software_row(self, software_name, classification=None, version=None):
         software_row = dict()
         correct_case_software_name = self.get_software_name_correct_case(software_name)
         software_row['name'] = correct_case_software_name
         classification_list = self.get_software_classification(correct_case_software_name)
         if classification_list:
-            classification = classification_list[0]
+            if classification not in classification_list:
+                classification = classification_list[0]
         else:
-            classification = ''
+            if classification is None:
+                classification = ''
         software_row['classification'] = classification
         if version:
             software_row['version'] = str(version)

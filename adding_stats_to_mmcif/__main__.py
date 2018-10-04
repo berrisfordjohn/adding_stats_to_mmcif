@@ -11,7 +11,7 @@ if __name__ == '__main__':  # pragma: no cover
     parser.add_argument('--xml_file', help='input xml file', type=str)
     parser.add_argument('--output_mmcif', help='output mmcif file', type=str, required=True)
     parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)
-    parser.add_argument('--fasta_file', help='input fasta file', type=str)
+    parser.add_argument('--fasta_file', help='input fasta file', type=str, required=True)
     parser.add_argument('--software_file', help='file containing software used', type=str)
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,
                         default=logging.INFO)

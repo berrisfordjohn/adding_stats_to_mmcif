@@ -9,9 +9,10 @@ logging.basicConfig(format=FORMAT)
 
 from .add_sequence_to_mmcif import AddSequenceToMmcif
 from .add_data_from_aimless_xml import run_process as addDataToMmcif
+from .add_software_to_mmcif import AddSoftwareToMmcif
 
 
-def run_process(input_mmcif, output_mmcif, fasta_file, xml_file=None, software_list=None):
+def run_process(input_mmcif, output_mmcif, fasta_file, xml_file=None, software_file=None):
 
     worked = True
 
@@ -31,6 +32,14 @@ def run_process(input_mmcif, output_mmcif, fasta_file, xml_file=None, software_l
                                         fasta_file=fasta_file).process_data()
             if not worked:
                 logging.error('adding sequence to mmCIF failed')
+
+        if worked:
+            if software_file:
+                worked = AddSoftwareToMmcif(input_cif=output_mmcif,
+                                            output_cif=output_mmcif,
+                                            software_file=software_file).run_process()
+                if not worked:
+                    logging.error('adding software to mmCIF failed')
 
         if worked:
             shutil.rmtree(run_dir)

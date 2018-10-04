@@ -1,6 +1,7 @@
 import unittest
 import tempfile
 import os
+import json
 import shutil
 import logging
 from tests.access_test_files import TestFiles
@@ -71,6 +72,14 @@ class TestAddSoftware(unittest.TestCase):
         software_row = addsoft.get_software_row(software=software_name)
         self.assertTrue(software_row == result)
 
+    def test_single_software_from_file(self):
+        software_classification = 'data scaling'
+        result = {'name': 'Aimless', 'classification': software_classification}
+        addsoft = AddSoftwareToMmcif(input_cif=None, output_cif=None, software_file=self.test_files.test_json)
+        addsoft.process_software_file()
+        software_row = addsoft.process_input_software_dict(software_dict=addsoft.input_software_list[0])
+        self.assertTrue(software_row == result)
+
     def test_single_software_row(self):
         software_name = 'AIMLESS'
         software_classification = 'data scaling'
@@ -109,6 +118,20 @@ class TestAddSoftware(unittest.TestCase):
         addsoft = AddSoftwareToMmcif(input_cif=self.test_files.cif,
                                      output_cif=output_cif,
                                      software_list=[{'pgm': software_name, 'version': software_version}])
+        addsoft.run_process()
+        self.assertTrue(os.path.exists(output_cif))
+
+        addsoft_result = AddSoftwareToMmcif(input_cif=output_cif, output_cif=None, software_list=[])
+        software_list = addsoft_result.get_existing_software()
+        self.assertTrue(software_list.sort() == ['refmac', 'Aimless'].sort())
+
+        shutil.rmtree(temp_dir)
+
+    def test_add_single_row_from_file(self):
+        self.test_files.one_sequence()
+        temp_dir = tempfile.mkdtemp()
+        output_cif = os.path.join(temp_dir, 'output.cif')
+        addsoft = AddSoftwareToMmcif(input_cif=self.test_files.cif, output_cif=output_cif, software_file=self.test_files.test_json)
         addsoft.run_process()
         self.assertTrue(os.path.exists(output_cif))
 

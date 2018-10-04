@@ -14,10 +14,11 @@ logging.basicConfig(format=FORMAT)
 
 class AddSoftwareToMmcif:
 
-    def __init__(self, input_cif, output_cif, software_list):
+    def __init__(self, input_cif, output_cif, software_list=None, software_file=None):
         self.input_cif = input_cif
         self.output_cif = output_cif
         self.input_software_list = software_list
+        self.input_software_file = software_file
         self.existing_software = list()
         self.software_row = dict()
         self.mm = mmcifHandling(fileName=self.input_cif)
@@ -28,6 +29,16 @@ class AddSoftwareToMmcif:
         if not parsed:
             logging.error('unable to parse mmcif: {}'.format(self.input_cif))
         return parsed
+
+    def process_software_file(self):
+        try:
+            if os.path.exists(self.input_software_file):
+                with open(self.input_software_file) as infile:
+                    self.input_software_list = json.load(infile)
+            else:
+                logging.error('{} not found'.format(self.input_software_file))
+        except Exception as e:
+            logging.error(e)
 
     def get_existing_software(self):
         self.existing_software = self.mm.getCatItemValues(category='software', item='name')
@@ -80,6 +91,8 @@ class AddSoftwareToMmcif:
         return self.software_row
 
     def run_process(self):
+        if self.input_software_file:
+            self.process_software_file()
         parsed = self.parse_mmcif()
         if parsed:
             if self.check_input_software_list():
@@ -101,21 +114,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--output_mmcif', help='output mmcif file', type=str, required=True)
     parser.add_argument('--input_mmcif', help='input mmcif file', type=str, required=True)
-    parser.add_argument('--software_list', help='input software list', required=True, type=str)
+    parser.add_argument('--software_file', help='input file containing software list', required=True, type=str)
     parser.add_argument('-d', '--debug', help='debugging', action='store_const', dest='loglevel', const=logging.DEBUG,
                         default=logging.INFO)
 
     args = parser.parse_args()
 
     logger.setLevel(args.loglevel)
-
-    software_list = args.software_list
-    print(args.software_list)
-    try:
-        software_list = json.loads(software_list)
-    except Exception as e:
-        logging.error(e)
-    add_soft = AddSoftwareToMmcif(software_list=software_list, input_cif=args.input_mmcif,
+    add_soft = AddSoftwareToMmcif(software_file=args.software_file, input_cif=args.input_mmcif,
                                   output_cif=args.output_mmcif)
     worked = add_soft.run_process()
     if not worked:

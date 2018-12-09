@@ -19,4 +19,6 @@ htmlcov/*
 ignore_*
 out.cif
 
-
+# builds
+build*
+dist*

@@ -3,9 +3,7 @@ python:
   - "2.7"
   - "3.5"
   - "3.6"
-#  - "3.7" # requires the following two lines (17th July 2018)
-# dist: xenial # for python 3.7
-# sudo: true # for python 3.7
+  - "3.7"
 
 install:
   - pip install --upgrade pip setuptools

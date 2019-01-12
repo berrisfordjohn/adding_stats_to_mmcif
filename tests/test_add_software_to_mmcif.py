@@ -51,6 +51,5 @@ class TestSoftwareRow(unittest.TestCase):
         self.assertTrue(result == software_row)
 
 
-
 if __name__ == '__main__':
     unittest.main()

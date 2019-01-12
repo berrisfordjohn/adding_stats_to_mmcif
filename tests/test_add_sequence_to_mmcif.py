@@ -23,13 +23,14 @@ class TestAddDataToMmcif(unittest.TestCase):
         self.assertTrue(worked)
         self.assertTrue(os.path.exists(output_cif))
 
-        om = mmcifHandling(fileName=output_cif)
-        entity_poly = om.getCategory('entity_poly')
-        for cat in entity_poly:
-            for instance, entity_id in enumerate(entity_poly[cat]['entity_id']):
-                sequence = entity_poly[cat]['pdbx_seq_one_letter_code'][instance]
-                sample_seq_key = self.test_files.sample_seq_to_obs_remapping[entity_id]
-                self.assertTrue(sequence == sample_seq[sample_seq_key])
+        om = mmcifHandling()
+        if om.parse_mmcif(fileName=output_cif):
+            entity_poly = om.getCategory('entity_poly')
+            for cat in entity_poly:
+                for instance, entity_id in enumerate(entity_poly[cat]['entity_id']):
+                    sequence = entity_poly[cat]['pdbx_seq_one_letter_code'][instance]
+                    sample_seq_key = self.test_files.sample_seq_to_obs_remapping[entity_id]
+                    self.assertTrue(sequence == sample_seq[sample_seq_key])
 
         shutil.rmtree(temp_dir)
 

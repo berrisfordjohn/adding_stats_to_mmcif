@@ -8,19 +8,28 @@ logger = logging.getLogger()
 
 
 class mmcifHandling:
-    def __init__(self, fileName, datablock=0, atom_site=True):
-        # self.cif_handling = pdbe_cif_handling(fileName=fileName, datablock=datablock, atom_site=atom_site)
-        self.cif_handling = gemmi_cif_handling(fileName=fileName, datablock=datablock, atom_site=atom_site)
+    def __init__(self):
+        self.cif_handling = gemmi_cif_handling()
 
-    def parse_mmcif(self):
+    def parse_mmcif(self, fileName):
         """
         parse the mmcif
         return True if worked, False if failed
         """
-        return self.cif_handling.parse_mmcif()
+        if self.cif_handling.parse_mmcif(fileName=fileName):
+            if len(self.getDatablocks()) > 0:
+                if self.getDatablock():
+                    return True
+        return False
 
-    def getDatablock(self):
-        return self.cif_handling.getDatablock()
+    def getDatablocks(self):
+        return self.cif_handling.getDataBlockNames()
+
+    def getDatablock(self, datablock=0):
+        return self.cif_handling.getDatablock(datablock=datablock)
+
+    def getCategories(self):
+        return self.cif_handling.getCategories()
 
     def getCategoryObject(self, category):
         return self.cif_handling.getCategory(category)
@@ -32,7 +41,7 @@ class mmcifHandling:
         return self.cif_handling.getCategory(category=category)
 
     def getCategoryList(self, category):
-        return self.cif_handling.getCategoryList(category=category)
+        return self.cif_handling.getCategoryAsList(category=category)
 
     def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
         return self.cif_handling.addValuesToCategory(category=category, item_value_dictionary=item_value_dictionary,

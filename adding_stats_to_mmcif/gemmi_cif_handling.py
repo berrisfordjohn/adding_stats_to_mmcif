@@ -107,23 +107,26 @@ class mmcifHandling:
     def getCatItemValues(self, category, item):
         items = [item]
         result_dict = self.getCatItemsValues(category=category, items=items)
-        values = result_dict[item]
+        values = result_dict.get(item)
         return values
 
     def getCategory(self, category):
-        logging.debug('getCategory')
         mmcif_dictionary = dict()
         if self.datablock:
             category = self.prepare_cat(category=category)
             cat = self.datablock.find_mmcif_category(category)
             if cat:
                 for cif_item in cat.tags:
-                    cif_item = cif_item.split('.')[-1]
-                    logging.debug('mmCIF item: %s' % cif_item)
-                    values = self.getCatItemValues(category=category, item=cif_item)
-                    mmcif_dictionary.setdefault(category, {})[cif_item] = values
+                    if cif_item:
+                        cif_item = cif_item.split('.')[-1]
+                        values = self.getCatItemValues(category=category, item=cif_item)
+                        mmcif_dictionary.setdefault(category, {})[cif_item] = values
 
         return mmcif_dictionary
+
+    def setCategory(self, category, item_value_dict):
+        category = self.prepare_cat(category=category)
+        self.datablock.set_mmcif_category(category, item_value_dict)
 
     def getCategoryAsList(self, category):
         self.prepare_cat(category=category)
@@ -141,63 +144,11 @@ class mmcifHandling:
 
         return mmcif_cat_list
 
-    def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
-        category = self.prepare_cat(category=category)
-        current_values = self.getCategory(category=category)
-        if current_values:
-            if category in current_values:
-                for mmcif_item in current_values[category]:
-                    new_value = item_value_dictionary[mmcif_item]
-                    if type(new_value) == str:
-                        new_value = [new_value]
-                    num_new_values = len(new_value)
-                    num_current_items = len(current_values[category][mmcif_item])
-                    if mmcif_item in item_value_dictionary:
-                        current_values[category][mmcif_item].extend(new_value)
-                    elif mmcif_item == ordinal_item:
-                        for pos in range(num_new_values):
-                            ordinal = num_current_items + pos + 1
-                            current_values[category][mmcif_item].append(str(ordinal))
-                    else:
-                        empty_values = [''] * num_new_values
-                        current_values[category][mmcif_item].extend(empty_values)
-        else:
-            for mmcif_item in item_value_dictionary:
-                new_value = item_value_dictionary[mmcif_item]
-                if type(new_value) == str:
-                    new_value = [new_value]
-                num_new_values = len(new_value)
-                if mmcif_item == ordinal_item:
-                    for pos in range(num_new_values):
-                        ordinal = pos + 1
-                        current_values.setdefault(category, {}).setdefault(mmcif_item, []).append(str(ordinal))
-                else:
-                    current_values.setdefault(category, {}).setdefault(mmcif_item, []).extend(new_value)
-
-        return current_values
 
     def removeCategory(self, category):
         category = self.prepare_cat(category=category)
         # self.cif_categories.delete_category(category)
         pass
-
-    def addToCif(self, data_dictionary):
-        logging.debug('addToCif')
-        logging.debug(data_dictionary)
-        if self.datablock:
-            try:
-                if data_dictionary:
-                    for category in data_dictionary:
-                        category = self.prepare_cat(category=category)
-                        item_value_dict = data_dictionary[category]
-                        item_value_dict = self.addValuesToCategory(category=category, item_value_dictionary=item_value_dict)
-                        self.datablock.set_mmcif_category(category, item_value_dict)
-                return True
-            except Exception as e:
-                logging.error(e)
-        else:
-            logging.error('no datablock set')
-        return False
 
     def writeCif(self, fileName):
         if not self.cifObj:
@@ -226,8 +177,8 @@ if __name__ == '__main__':
 
     cat = 'struct_conf'
     items = ['id', 'beg_label_comp_id']
-    mh = mmcifHandling(fileName=input_cif)
-    parsed_cif = mh.parse_mmcif()
+    mh = mmcifHandling()
+    parsed_cif = mh.parse_mmcif(fileName=input_cif)
     if parsed_cif:
         logging.debug('cif parsed')
         mh.getDatablock()

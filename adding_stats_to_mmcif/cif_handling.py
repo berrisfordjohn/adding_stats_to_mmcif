@@ -28,6 +28,9 @@ class mmcifHandling:
     def getDatablock(self, datablock=0):
         return self.cif_handling.getDatablock(datablock=datablock)
 
+    def prepareCategory(self, category):
+        return self.cif_handling.prepare_cat(category=category)
+
     def getCategories(self):
         return self.cif_handling.getCategories()
 
@@ -43,18 +46,66 @@ class mmcifHandling:
     def getCategoryList(self, category):
         return self.cif_handling.getCategoryAsList(category=category)
 
-    def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
-        return self.cif_handling.addValuesToCategory(category=category, item_value_dictionary=item_value_dictionary,
-                                                     ordinal_item=ordinal_item)
+    def setCategory(self, category, item_value_dict):
+        self.cif_handling.setCategory(category=category, item_value_dict=item_value_dict)
 
     def removeCategory(self, category):
-        self.cif_handling.removeCategory(category=category)
-
-    def addToCif(self, data_dictionary):
-        self.cif_handling.addToCif(data_dictionary=data_dictionary)
+        self.setCategory(category=category, item_value_dict={})
 
     def writeCif(self, fileName):
         self.cif_handling.writeCif(fileName=fileName)
+
+    def addToCif(self, data_dictionary):
+        logging.debug(data_dictionary)
+        if self.cif_handling.datablock:
+            try:
+                if data_dictionary:
+                    for category in data_dictionary:
+                        item_value_dict = data_dictionary[category]
+                        cat_item_value_dict = self.addValuesToCategory(category=category,
+                                                                       item_value_dictionary=item_value_dict)
+                        category = self.prepareCategory(category=category)
+                        self.setCategory(category, cat_item_value_dict[category])
+                return True
+            except Exception as e:
+                logging.error(e)
+        else:
+            logging.error('no datablock set')
+        return False
+
+    def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
+        category = self.prepareCategory(category=category)
+        current_values = self.getCategory(category=category)
+        num_new_values = 0
+        for key in item_value_dictionary:
+            num_new_values = len(self.check_string_list(item_value_dictionary[key]))
+        if current_values:
+            if category in current_values:
+                for mmcif_item in current_values[category]:
+                    num_current_items = len(current_values[category][mmcif_item])
+                    if mmcif_item in item_value_dictionary:
+                        new_values = self.check_string_list(item_value_dictionary[mmcif_item])
+                        current_values[category][mmcif_item].extend(new_values)
+                    elif mmcif_item == ordinal_item:
+                        for pos in range(num_new_values):
+                            ordinal = num_current_items + pos + 1
+                            current_values[category][mmcif_item].append(str(ordinal))
+                    else:
+                        empty_values = [''] * num_new_values
+                        current_values[category][mmcif_item].extend(empty_values)
+        else:
+            for mmcif_item in item_value_dictionary:
+                new_values = self.check_string_list(item_value_dictionary[mmcif_item])
+                current_values.setdefault(category, {}).setdefault(mmcif_item, []).extend(new_values)
+
+        return current_values
+
+    @staticmethod
+    def check_string_list(value):
+        if type(value) == list:
+            return value
+        else:
+            return [str(value)]
 
     def addExptlToCif(self, method='X-RAY DIFFRACTION'):
         entry_id = ''

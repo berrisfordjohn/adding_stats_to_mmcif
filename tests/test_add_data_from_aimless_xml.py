@@ -50,6 +50,8 @@ class TestAddDataFromAimless(unittest.TestCase):
         software_cat = mm.getCategory(category='software')
         versions = software_cat['_software.']['version']
         names = software_cat['_software.']['name']
+        print('FAILURE!!!')
+        print(names)
         aimless_instance = None
         for instance, name in enumerate(names):
             if name == 'Aimless':

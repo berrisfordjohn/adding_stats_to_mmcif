@@ -81,29 +81,28 @@ class SequenceAlign:
         # aligner.match = 2
         # aligner.mismatch = -1
         # only need to run aligner.score. This improves memory usage and speed.
-        logging.debug('length of query: {}'.format(len(self.sequence1)))
-        logging.debug('length of target: {}'.format(len(self.sequence2)))
+        # logging.debug('length of query: {}'.format(len(self.sequence1)))
+        # logging.debug('length of target: {}'.format(len(self.sequence2)))
         alignments = aligner.align(self.sequence1, self.sequence2)
-        for alignment in sorted(alignments):
-            logging.debug(alignment)
-            # logging.debug(alignment.score)
-            logging.debug(alignment.target)
-            logging.debug(alignment.query)
-            logging.debug(alignment.path)
-            # logging.debug(dir(alignment))
-            current_query_position = 0
-            current_target_position = 0
-            for align_tupple in alignment.path:
-                working_query_position = align_tupple[0]
-                working_target_position = align_tupple[1]
-                query_shift = working_query_position - current_query_position
-                target_shift = working_target_position - current_target_position
-                logging.debug(query_shift)
-                # expand the shift into a list. Then for each position add the position in the list to a dictionary?
-
-                current_target_position = working_target_position
-                current_query_position = working_query_position
-
+        # for alignment in sorted(alignments):
+        #     logging.debug(alignment)
+        #     # logging.debug(alignment.score)
+        #     logging.debug(alignment.target)
+        #     logging.debug(alignment.query)
+        #     logging.debug(alignment.path)
+        #     # logging.debug(dir(alignment))
+        #     current_query_position = 0
+        #     current_target_position = 0
+        #     for align_tupple in alignment.path:
+        #         working_query_position = align_tupple[0]
+        #         working_target_position = align_tupple[1]
+        #         query_shift = working_query_position - current_query_position
+        #         target_shift = working_target_position - current_target_position
+        #         logging.debug(query_shift)
+        #         # expand the shift into a list. Then for each position add the position in the list to a dictionary?
+        #
+        #         current_target_position = working_target_position
+        #         current_query_position = working_query_position
 
         align_score = aligner.score(self.sequence1, self.sequence2)
         logging.info(align_score)

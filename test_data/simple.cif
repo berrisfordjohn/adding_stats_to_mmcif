@@ -1,0 +1,8 @@
+data_datablock
+#
+loop_
+_category1.item1
+_category1.item2
+row1_v1 row1_v2
+row2_v1 row2_v2
+

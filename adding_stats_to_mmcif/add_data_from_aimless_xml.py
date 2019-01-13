@@ -27,11 +27,11 @@ def run_process(xml_file, input_cif, output_cif):
             pc = mmcifHandling()
             pc.parse_mmcif(fileName=input_cif)
             # add aimless data to the mmCIF file
-            pc.addToCif(data_dictionary=xml_data)
+            ok = pc.addToCif(data_dictionary=xml_data)
             # update the software list in the mmCIF file to add aimless
             software_cat = pc.addValuesToCategory(category='software', item_value_dictionary=software_row,
                                                   ordinal_item='pdbx_ordinal')
-            pc.addToCif(data_dictionary=software_cat)
+            ok = pc.addToCif(data_dictionary=software_cat)
             # add exptl data
             pc.addExptlToCif()
             # write out the resulting mmCIF file.

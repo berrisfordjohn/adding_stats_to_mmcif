@@ -16,8 +16,8 @@ class AddToMmcif:
 
     def get_data(self, mmcif_file):
         if self.ch.parse_mmcif(fileName=mmcif_file):
-            for datablock in self.ch.getDatablocks():
-                if self.ch.getDatablock(datablock=datablock):
+            for position, datablock in enumerate(self.ch.getDatablocks()):
+                if self.ch.getDatablock(datablock=position):
                     for category in self.ch.getCategories():
                         self.mmcif_data.update(self.ch.getCategory(category=category))
 

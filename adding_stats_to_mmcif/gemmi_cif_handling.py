@@ -37,7 +37,7 @@ class mmcifHandling:
 
     def getDatablock(self, datablock=0):
         if self.cifObj:
-            if type(datablock) == int:
+            if isinstance(datablock, int):
                 if len(self.getDatablocks()) >= datablock:
                     self.datablock = self.cifObj[datablock]
                     return True

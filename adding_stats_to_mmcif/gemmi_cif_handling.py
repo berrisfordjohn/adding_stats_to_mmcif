@@ -41,7 +41,7 @@ class mmcifHandling:
                 if len(self.getDatablocks()) >= datablock:
                     self.datablock = self.cifObj[datablock]
                     return True
-            elif type(datablock) == str:
+            elif isinstance(datablock, ("".__class__, u"".__class__)):
                 if datablock in self.getDataBlockNames():
                     self.datablock = self.cifObj[datablock]
                     return True

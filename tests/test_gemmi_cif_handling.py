@@ -34,6 +34,20 @@ class TestGemmiCifHandling(unittest.TestCase):
         s = self.mh.parse_mmcif(fileName=self.test_files.TEST_SIMPLE_CIF)
         self.assertTrue(s)
 
+    def test_get_datablocks_by_num(self):
+        s = self.mh.parse_mmcif(fileName=self.test_files.TEST_SIMPLE_CIF)
+        self.assertTrue(s)
+        for position, datablock in enumerate(self.mh.getDatablocks()):
+            ret = self.mh.getDatablock(datablock=position)
+            self.assertTrue(ret)
+
+    def test_get_datablocks_by_name(self):
+        s = self.mh.parse_mmcif(fileName=self.test_files.TEST_SIMPLE_CIF)
+        self.assertTrue(s)
+        for datablock in self.mh.getDataBlockNames():
+            ret = self.mh.getDatablock(datablock=datablock)
+            self.assertTrue(ret)
+
     def test_prepare_category(self):
         category = 'test'
         result = '_test.'

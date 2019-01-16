@@ -148,12 +148,6 @@ class mmcifHandling:
 
         return mmcif_cat_list
 
-
-    def removeCategory(self, category):
-        category = self.prepare_cat(category=category)
-        # self.cif_categories.delete_category(category)
-        pass
-
     def writeCif(self, fileName):
         if not self.cifObj:
             return False
@@ -189,8 +183,9 @@ if __name__ == '__main__':
         logging.debug(mh.datablock)
         test = mh.getCatItemsValues(category=cat, items=items)
         print(test)
-        fake_data = {'test_cat': {'item1': ['1', '2', '3'], 'item2': ['2', '3', '4']}}
-        added = mh.addToCif(data_dictionary=fake_data)
+        category = 'test_cat'
+        fake_data = {category: {'item1': ['1', '2', '3'], 'item2': ['2', '3', '4']}}
+        mh.setCategory(category=category, item_value_dict=fake_data[category])
         mh.writeCif(fileName=output_cif)
     else:
         logging.error('unable to parse mmcif')

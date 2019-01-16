@@ -138,8 +138,8 @@ if __name__ == '__main__':
     output_cif = args.output_mmcif
 
     cat = 'reflns'
-    mh = mmcifHandling(fileName=input_cif)
-    parsed_cif = mh.parse_mmcif()
+    mh = mmcifHandling()
+    parsed_cif = mh.parse_mmcif(fileName=input_cif)
     if parsed_cif:
         logging.debug('parsed mmcif')
         test_dict = mh.getCategory(category=cat)

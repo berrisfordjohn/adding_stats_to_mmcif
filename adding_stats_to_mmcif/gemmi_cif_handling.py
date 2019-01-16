@@ -35,6 +35,11 @@ class mmcifHandling:
             blocks.append(block.name)
         return blocks
 
+    def getDataBlockName(self):
+        if self.datablock:
+            return self.datablock.name
+        return None
+
     def getDatablock(self, datablock=0):
         if self.cifObj:
             if isinstance(datablock, int):
@@ -78,8 +83,7 @@ class mmcifHandling:
                     datablockToGet = position
             logging.debug('datablock with atom_site cat: %s' % datablockToGet)
             self.datablock = self.cifObj[datablockToGet]
-            return self.datablock
-        return False
+        return self.datablock
 
     def prepare_cat(self, category):
         self.category = category

@@ -48,6 +48,32 @@ class TestGemmiCifHandling(unittest.TestCase):
             ret = self.mh.getDatablock(datablock=datablock)
             self.assertTrue(ret)
 
+    def test_get_datablocks_none_type(self):
+        s = self.mh.parse_mmcif(fileName=self.test_files.TEST_SIMPLE_CIF)
+        self.assertTrue(s)
+
+        ret = self.mh.getDatablock(datablock=None)
+        self.assertFalse(ret)
+
+    def test_get_datablocks_with_atom_site(self):
+        self.test_files.one_sequence()
+        s = self.mh.parse_mmcif(fileName=self.test_files.cif)
+        self.assertTrue(s)
+        ret = self.mh.getDataBlockWithAtomSite()
+        self.assertTrue(ret is not None)
+        ret = self.mh.getDataBlockName()
+        self.assertTrue(ret == '3ZT9')
+
+    def test_get_datablocks_with_most_cat(self):
+        self.test_files.one_sequence()
+        s = self.mh.parse_mmcif(fileName=self.test_files.cif)
+        self.assertTrue(s)
+        ret = self.mh.getDataBlockWithMostCat()
+        self.assertTrue(ret is not None)
+        ret = self.mh.getDataBlockName()
+        self.assertTrue(ret == '3ZT9')
+
+
     def test_prepare_category(self):
         category = 'test'
         result = '_test.'
@@ -62,6 +88,11 @@ class TestGemmiCifHandling(unittest.TestCase):
         category = '_category1.'
         self.assertTrue(category in self.mh.getCategories())
         self.assertTrue(len(self.mh.getCategories()) == 1)
+
+    def test_getCategory_with_no_datablock(self):
+        self.mh.parse_mmcif(fileName=self.test_files.TEST_SIMPLE_CIF)
+        category = '_category1.'
+        self.assertTrue(self.mh.getCategories() is None)
 
     def test_setCategory_new_category(self):
         self.mh.parse_mmcif(fileName=self.test_files.TEST_SIMPLE_CIF)

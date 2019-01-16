@@ -24,14 +24,14 @@ def run_process(xml_file, input_cif, output_cif):
     if xml_data:
         # if there is data from the XML file then add this to the mmCIF file
         if os.path.exists(input_cif):
-            pc = mmcifHandling(fileName=input_cif)
-            pc.parse_mmcif()
+            pc = mmcifHandling()
+            pc.parse_mmcif(fileName=input_cif)
             # add aimless data to the mmCIF file
-            pc.addToCif(data_dictionary=xml_data)
+            ok = pc.addToCif(data_dictionary=xml_data)
             # update the software list in the mmCIF file to add aimless
             software_cat = pc.addValuesToCategory(category='software', item_value_dictionary=software_row,
                                                   ordinal_item='pdbx_ordinal')
-            pc.addToCif(data_dictionary=software_cat)
+            ok = pc.addToCif(data_dictionary=software_cat)
             # add exptl data
             pc.addExptlToCif()
             # write out the resulting mmCIF file.

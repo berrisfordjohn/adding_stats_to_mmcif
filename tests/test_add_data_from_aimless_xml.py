@@ -6,6 +6,7 @@ from tests.access_test_files import TestFiles
 from adding_stats_to_mmcif.add_data_from_aimless_xml import get_xml_data, run_process
 from adding_stats_to_mmcif.cif_handling import mmcifHandling
 
+
 class TestAddDataFromAimless(unittest.TestCase):
 
     def setUp(self):
@@ -43,12 +44,14 @@ class TestAddDataFromAimless(unittest.TestCase):
         output_cif = os.path.join(output_folder, 'output.cif')
         worked = run_process(xml_file=xml_file, input_cif=input_cif, output_cif=output_cif)
         self.assertTrue(worked)
-        mm = mmcifHandling(fileName=output_cif)
-        worked = mm.parse_mmcif()
+        mm = mmcifHandling()
+        worked = mm.parse_mmcif(fileName=output_cif)
         self.assertTrue(worked)
         software_cat = mm.getCategory(category='software')
         versions = software_cat['_software.']['version']
         names = software_cat['_software.']['name']
+        print('FAILURE!!!')
+        print(names)
         aimless_instance = None
         for instance, name in enumerate(names):
             if name == 'Aimless':

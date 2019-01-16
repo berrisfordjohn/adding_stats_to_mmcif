@@ -26,24 +26,20 @@ residue_map_3to1['T'] = 'T'
 residue_map_3to1['U'] = 'U'
 
 
-class ExtractFromMmcif():
+class ExtractFromMmcif:
 
-    def __init__(self, mmcif_file):
-        self.mmcif_file = mmcif_file
-        self.mm = mmcifHandling(fileName=self.mmcif_file)
+    def __init__(self, ):
+        self.mm = mmcifHandling()
         self.sequence_dict = dict()
         self.non_standard_residue_mapping = dict()
 
     def get_sequence_dict(self):
-        parsed = self.parse_mmcif()
-        if parsed:
-            self.get_seq_of_polymer_entities()
-            self.get_data_from_atom_site()
+        self.get_seq_of_polymer_entities()
+        self.get_data_from_atom_site()
         return self.sequence_dict
 
-    def parse_mmcif(self):
-        parsed = self.mm.parse_mmcif()
-        return parsed
+    def parse_mmcif(self, mmcif_file):
+        return self.mm.parse_mmcif(mmcif_file)
 
     def get_one_letter_code(self, three_letter):
         if three_letter in residue_map_3to1:
@@ -184,8 +180,10 @@ class AddSequenceToMmcif:
     def process_mmcif(self):
         logging.debug('processing {}'.format(self.input_mmcif))
         if os.path.exists(self.input_mmcif):
-            self.mmcif = ExtractFromMmcif(mmcif_file=self.input_mmcif)
-            self.mmcif_sequence_dict = self.mmcif.get_sequence_dict()
+            self.mmcif = ExtractFromMmcif()
+            ok = self.mmcif.parse_mmcif(mmcif_file=self.input_mmcif)
+            if ok:
+                self.mmcif_sequence_dict = self.mmcif.get_sequence_dict()
         logging.debug(self.mmcif_sequence_dict)
         return self.mmcif_sequence_dict
 

@@ -28,8 +28,9 @@ class SequenceAlign:
         self.sequence1 = sequence1
         self.sequence2 = sequence2
         self.score = None
-        self.alignment_dict = dict()
-        self.alignment_list = list()
+        self.alignment_result = list()
+        self.alignment_result_target = list()
+        self.alignment_result_query = list()
         logging.debug(self.sequence1)
         logging.debug(self.sequence2)
 
@@ -84,45 +85,51 @@ class SequenceAlign:
         # logging.debug('length of query: {}'.format(len(self.sequence1)))
         # logging.debug('length of target: {}'.format(len(self.sequence2)))
         alignments = aligner.align(self.sequence1, self.sequence2)
-        # for alignment in sorted(alignments):
-        #     logging.debug(alignment)
-        #     # logging.debug(alignment.score)
-        #     logging.debug(alignment.target)
-        #     logging.debug(alignment.query)
-        #     logging.debug(alignment.path)
-        #     # logging.debug(dir(alignment))
-        #     current_query_position = 0
-        #     current_target_position = 0
-        #     for align_tupple in alignment.path:
-        #         working_query_position = align_tupple[0]
-        #         working_target_position = align_tupple[1]
-        #         query_shift = working_query_position - current_query_position
-        #         target_shift = working_target_position - current_target_position
-        #         logging.debug(query_shift)
-        #         # expand the shift into a list. Then for each position add the position in the list to a dictionary?
-        #
-        #         current_target_position = working_target_position
-        #         current_query_position = working_query_position
+        for alignment in sorted(alignments):
+            self.alignment_result_query = list()
+            self.alignment_result_target = list()
+            logging.debug(alignment.score)
+            current_query_position = 0
+            current_target_position = 0
 
-        align_score = aligner.score(self.sequence1, self.sequence2)
-        logging.info(align_score)
+            for align_tupple in alignment.path:
+                working_target_position = align_tupple[0]
+                working_query_position = align_tupple[1]
+                query_shift = working_query_position - current_query_position
+                target_shift = working_target_position - current_target_position
+                #  logging.debug('query shift: {}'.format(query_shift))
+                #  logging.debug('target shift: {}'.format(target_shift))
+                # expand the shift into a list. Then for each position add the position in the list to a dictionary?
+                query_sequence = alignment.query[current_query_position:working_query_position]
+                #  logging.debug('query sequence: {}'.format(query_sequence))
+                target_sequence = alignment.target[current_target_position:working_target_position]
+                #  logging.debug('target sequence: {}'.format(target_sequence))
+                # need to account for insertions
+                self.alignment_result_target.extend(list(target_sequence))
+                if query_sequence:
+                    query_sequence = list(query_sequence)
+                elif target_sequence:
+                    query_sequence = ['-'] * len(target_sequence)
+                self.alignment_result_query.extend(query_sequence)
 
-        self.score = align_score
+                current_target_position = working_target_position
+                current_query_position = working_query_position
 
-    """
-    def do_alignment_emboss(self):
-        needle_cline.asequence = "asis:" + self.sequence1
-        needle_cline.bsequence = "asis:" + self.sequence2
-        stdout, stderr = needle_cline()
-        result = [AlignIO.read(StringIO.StringIO(stdout), "emboss")]
-        self.score = self.get_emboss_score(result[0].seq, result[1].seq)
+            logging.debug(self.alignment_result_target)
+            logging.debug(self.alignment_result_query)
 
-    def get_emboss_score(self, seq1, seq2):
-        return sum(aa1 == aa2 for aa1, aa2 in zip(seq1, seq2))
-    """
+            self.score = alignment.score
+            result = {'score': self.score, 'target_result': self.alignment_result_target,
+                      'query_result': self.alignment_result_query}
+            self.alignment_result.append(result)
+        #align_score = aligner.score(self.sequence1, self.sequence2)
+        logging.info(self.score)
 
     def get_alignment_score(self):
         return self.score
+
+    def get_alignment_result(self):
+        return self.alignment_result
 
     def do_sequences_align(self):
         if self.score > 0:
@@ -130,6 +137,7 @@ class SequenceAlign:
         return False
 
     def do_sequence_alignment(self):
+        self.alignment_result = []
         sequences_ok, error = self.prepare_sequences()
         if not sequences_ok:
             return False, error, 0
@@ -155,6 +163,9 @@ if __name__ == '__main__':
     for sequence in test_sequences:
         sa = SequenceAlign(sequence1=test_sequences[0], sequence2=sequence)
         aligned, error, score = sa.do_sequence_alignment()
+        result_list = sa.get_alignment_result()
         logging.info('is aligned: {}'.format(aligned))
         logging.info('error: "{}"'.format(error))
         logging.info('score: {}'.format(score))
+        logging.info('number of results: {}'.format(len(result_list)))
+        logging.info(result_list)

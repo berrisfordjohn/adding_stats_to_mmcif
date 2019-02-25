@@ -5,22 +5,9 @@ from Bio import Align
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
 
-# from Bio import AlignIO
-# from Bio.Emboss.Applications import NeedleCommandline
-# import StringIO
-
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"
 logging.basicConfig(format=FORMAT)
-
-
-# needle_cline = NeedleCommandline()
-# needle_cline.gapopen = 0.5
-# needle_cline.gapextend = 0.1
-# needle_cline.gapopen = 10
-# needle_cline.gapextend = 0.5
-# needle_cline.stdout = True
-# needle_cline.outfile = "stdout"
 
 class SequenceAlign:
 
@@ -58,8 +45,6 @@ class SequenceAlign:
     def prepare_sequences(self):
         self.sequence1 = self.remove_gaps(self.sequence1)
         self.sequence2 = self.remove_gaps(self.sequence2)
-        # if len(self.sequence1) > 2000 or len(self.sequence2) > 2000:
-        #    return False, 'sequences too long. Please install emboss needle'
         return self.both_sequences_same_type()
 
     def pairwise2(self):

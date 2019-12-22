@@ -7,11 +7,15 @@ python:
 
 install:
   - pip install --upgrade pip setuptools
+  - pip install tox
+  - pip install tox-travis
   - pip install coveralls
+
 
 # Command to run tests
 #script: python setup.py test
-script: coverage run --source adding_stats_to_mmcif setup.py test
+#script: coverage run --source adding_stats_to_mmcif setup.py test
+script: tox
 
 after_success:
     coveralls

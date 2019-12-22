@@ -22,3 +22,9 @@ out.cif
 # builds
 build*
 dist*
+
+#venv
+venv*
+
+#tox
+.tox*

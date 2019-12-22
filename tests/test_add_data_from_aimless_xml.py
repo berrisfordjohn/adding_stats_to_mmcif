@@ -37,6 +37,16 @@ class TestAddDataFromAimless(unittest.TestCase):
         self.assertTrue(worked)
         shutil.rmtree(output_folder)
 
+    def test_integration_writes_output_file_phenix(self):
+        self.test_files.one_sequence_1ejg_phenix()
+        xml_file = self.test_files.TEST_AIMLESS_XML_FILE
+        input_cif = self.test_files.cif
+        output_folder = tempfile.mkdtemp()
+        output_cif = os.path.join(output_folder, 'output.cif')
+        worked = run_process(xml_file=xml_file, input_cif=input_cif, output_cif=output_cif)
+        self.assertTrue(worked)
+        shutil.rmtree(output_folder)
+
     def test_integration_version_in_output_file(self):
         xml_file = self.test_files.TEST_AIMLESS_XML_FILE
         input_cif = self.test_files.TEST_VALID_MMCIF_FILE

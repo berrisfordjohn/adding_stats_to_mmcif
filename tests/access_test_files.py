@@ -50,6 +50,18 @@ class TestFiles:
             'sequence': 'GPLGSSQIPASEQETLVRPKPLLLKLLKSVGAQKDTYTMKEVLFYLGQYIMTKRLYDAAQQHIVYCSNDLLGDLFGVPSFSVKEHRKIYTMIYRNLV',
             'chains': ['AAA']}
 
+    def one_sequence_1ejg_phenix(self):
+        self.fasta = os.path.join(self.test_data, "1ejg.seq")
+        self.cif = os.path.join(self.test_data, "1ejg_phenix.cif")
+        self.sample_seq = {
+            '1EJG:A|PDBID|CHAIN|SEQUENCE': 'TTCCPSIVARSNFNVCRLPGTPEALCATYTGCIIIPGATCPGDYAN'}
+        self.sample_seq_to_obs_remapping = {'1': '1EJG:A|PDBID|CHAIN|SEQUENCE'}
+        self.observed_seq = dict()
+        self.observed_seq['1'] = {
+            'sequence': 'TTCCPSIVARSNFNVCRLPGTPEALCATYTGCIIIPGATCPGDYAN',
+            'chains': ['A']}
+        
+
     def four_chains_one_polymer(self):
         self.fasta = os.path.join(self.test_data, "four_chains_one_polymer.fasta")
         self.cif = os.path.join(self.test_data, "pdb6fqf_refmac1.cif")

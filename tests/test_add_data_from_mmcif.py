@@ -42,6 +42,34 @@ class TestAddDataFromMMCif(unittest.TestCase):
             values = data.get(prepared_cat, {}).get(item, [])
             self.assertTrue(len(values) == 3)
 
+    def test_add_to_mmcif_existing_cat_new_items(self):
+        category = 'category1'
+        prepared_cat = self.ac.ch.prepareCategory(category=category)
+        data_dict = {category: {'item3': ['row1_v1','row2_v2'],
+                                'item4': ['row1_v1', 'row2_v2']
+                                }
+                     }
+        ret = self.ac.add_to_cif(input_mmcif_file=self.simple, output_mmcif_file=self.outfile,
+                                 data_dictionary=data_dict)
+        self.assertTrue(ret)
+        ret = self.ac.ch.getCategories()
+        self.assertTrue(len(ret) == 1)
+        data = self.ac.ch.getCategory(category=category)
+        self.assertTrue(data != dict())
+        for item in data.get(prepared_cat, {}):
+            values = data.get(prepared_cat, {}).get(item, [])
+            self.assertTrue(len(values) == 2)
+
+    def test_add_to_mmcif_existing_cat_inconsistent_items(self):
+        category = 'category1'
+        prepared_cat = self.ac.ch.prepareCategory(category=category)
+        data_dict = {category: {'item3': 'row2_v2',
+                                }
+                     }
+        ret = self.ac.add_to_cif(input_mmcif_file=self.simple, output_mmcif_file=self.outfile,
+                                 data_dictionary=data_dict)
+        self.assertFalse(ret)
+
     def tearDown(self):
         if self.tempDir:
             shutil.rmtree(self.tempDir)

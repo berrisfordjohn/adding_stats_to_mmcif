@@ -61,11 +61,17 @@ class mmcifHandling:
             try:
                 if data_dictionary:
                     for category in data_dictionary:
+                        logging.debug(category)
                         item_value_dict = data_dictionary[category]
+                        logging.debug('item value dict {}'.format(item_value_dict))
                         cat_item_value_dict = self.addValuesToCategory(category=category,
                                                                        item_value_dictionary=item_value_dict)
+                        logging.debug('cat item dict {}'.format(cat_item_value_dict))
                         category = self.prepareCategory(category=category)
-                        self.setCategory(category, cat_item_value_dict[category])
+                        if cat_item_value_dict:
+                            self.setCategory(category, cat_item_value_dict[category])
+                        else:
+                            return False
                 return True
             except Exception as e:
                 logging.error(e)
@@ -73,26 +79,52 @@ class mmcifHandling:
             logging.error('no datablock set')
         return False
 
+    def mergeCategory(self, category, item_value_dictionary):
+        category = self.prepareCategory(category=category)
+        current_values = self.getCategory(category=category)
+        for mmcif_item in item_value_dictionary:
+            values = item_value_dictionary[mmcif_item]
+            current_values[category][mmcif_item] = values
+        return current_values
+
     def addValuesToCategory(self, category, item_value_dictionary, ordinal_item=None):
+        logging.debug('addValuesToCategory')
         category = self.prepareCategory(category=category)
         current_values = self.getCategory(category=category)
         num_new_values = 0
+        num_current_values = 0
         for key in item_value_dictionary:
             num_new_values = len(self.check_string_list(item_value_dictionary[key]))
         if current_values:
             if category in current_values:
+                logging.debug(current_values)
+                current_mmcif_items = current_values[category].keys()
+                new_mmcif_items = item_value_dictionary.keys()
                 for mmcif_item in current_values[category]:
-                    num_current_items = len(current_values[category][mmcif_item])
-                    if mmcif_item in item_value_dictionary:
-                        new_values = self.check_string_list(item_value_dictionary[mmcif_item])
-                        current_values[category][mmcif_item].extend(new_values)
-                    elif mmcif_item == ordinal_item:
-                        for pos in range(num_new_values):
-                            ordinal = num_current_items + pos + 1
-                            current_values[category][mmcif_item].append(str(ordinal))
+                    num_current_values = len(current_values[category][mmcif_item])
+                if set(current_mmcif_items) & set(new_mmcif_items):
+                    logging.debug('overlap between input and output category')
+                    for mmcif_item in current_values[category]:
+                        num_current_items = len(current_values[category][mmcif_item])
+                        if mmcif_item in item_value_dictionary:
+                            new_values = self.check_string_list(item_value_dictionary[mmcif_item])
+                            current_values[category][mmcif_item].extend(new_values)
+                        elif mmcif_item == ordinal_item:
+                            for pos in range(num_new_values):
+                                ordinal = num_current_items + pos + 1
+                                current_values[category][mmcif_item].append(str(ordinal))
+                        else:
+                            empty_values = [''] * num_new_values
+                            current_values[category][mmcif_item].extend(empty_values)
+                            #elif num_current_items == 0:
+                else:
+                    logging.debug('no overlap between new and current items')
+                    if num_new_values == num_current_values:
+                        logging.debug('same number of values')
+                        current_values = self.mergeCategory(category=category, item_value_dictionary=item_value_dictionary)
                     else:
-                        empty_values = [''] * num_new_values
-                        current_values[category][mmcif_item].extend(empty_values)
+                        logging.error('different number of values')
+                        return {}
         else:
             for mmcif_item in item_value_dictionary:
                 new_values = self.check_string_list(item_value_dictionary[mmcif_item])

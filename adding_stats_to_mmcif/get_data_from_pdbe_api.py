@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-import re
-import requests
-import logging
 import argparse
+import logging
+import re
+
+import requests
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"

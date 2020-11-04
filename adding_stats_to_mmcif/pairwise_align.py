@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-import logging
 import argparse
+import logging
+
 from Bio import Align
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist

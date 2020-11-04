@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import logging
-from gemmi import cif
-import pprint
-import os
 import argparse
+import logging
+import os
+
+from gemmi import cif
 
 logger = logging.getLogger()
 

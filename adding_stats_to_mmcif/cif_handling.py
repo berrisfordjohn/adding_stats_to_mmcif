@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import logging
 import argparse
+import logging
 
 from .gemmi_cif_handling import mmcifHandling as gemmi_cif_handling
 
@@ -116,12 +116,13 @@ class mmcifHandling:
                         else:
                             empty_values = [''] * num_new_values
                             current_values[category][mmcif_item].extend(empty_values)
-                            #elif num_current_items == 0:
+                            # elif num_current_items == 0:
                 else:
                     logging.debug('no overlap between new and current items')
                     if num_new_values == num_current_values:
                         logging.debug('same number of values')
-                        current_values = self.mergeCategory(category=category, item_value_dictionary=item_value_dictionary)
+                        current_values = self.mergeCategory(category=category,
+                                                            item_value_dictionary=item_value_dictionary)
                     else:
                         logging.error('different number of values')
                         return {}

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
+import argparse
+import logging
+import os
+
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio.Alphabet import IUPAC
-import logging
-import argparse
-import os
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"

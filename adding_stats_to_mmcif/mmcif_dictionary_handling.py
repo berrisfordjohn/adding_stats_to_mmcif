@@ -1,5 +1,5 @@
-import os
 import json
+import os
 
 
 class SoftwareClassification:
@@ -10,7 +10,7 @@ class SoftwareClassification:
         self.get_software_data()
 
     def get_software_data(self):
-        software_json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),'software_classification.json')
+        software_json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'software_classification.json')
         if not self.software_dictionary:
             if os.path.exists(software_json_file):
                 with open(software_json_file) as json_file:

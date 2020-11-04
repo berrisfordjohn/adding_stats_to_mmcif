@@ -1,10 +1,10 @@
 #!/usr/bin/env python
+import argparse
 import logging
 import pprint
-import os
-import argparse
-from .xml_parsing import parse_xml
+
 from .mmcif_dictionary_handling import SoftwareClassification
+from .xml_parsing import parse_xml
 
 logger = logging.getLogger()
 

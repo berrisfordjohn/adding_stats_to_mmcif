@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-from .aimless_xml_parser import aimlessReport
-from .cif_handling import mmcifHandling
 import argparse
 import logging
 import os
+
+from .aimless_xml_parser import aimlessReport
+from .cif_handling import mmcifHandling
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"

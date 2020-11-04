@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-import os
-from .cif_handling import mmcifHandling
-from .process_fasta import ProcessFasta
 import argparse
 import logging
-from .pairwise_align import SequenceAlign
+import os
+
+from .cif_handling import mmcifHandling
 from .get_data_from_pdbe_api import GetSpecificDataFromPdbeAPI
+from .pairwise_align import SequenceAlign
+from .process_fasta import ProcessFasta
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"

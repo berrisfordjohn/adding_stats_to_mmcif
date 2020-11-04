@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-from adding_stats_to_mmcif.cif_handling import mmcifHandling
 import argparse
 import logging
 from pprint import pprint
+
+from adding_stats_to_mmcif.cif_handling import mmcifHandling
 
 logger = logging.getLogger()
 FORMAT = "%(filename)s - %(funcName)s - %(message)s"

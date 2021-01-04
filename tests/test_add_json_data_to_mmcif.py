@@ -40,6 +40,36 @@ class TestAddDataFromMMCif(unittest.TestCase):
         ret = self.ac.ch.getCategories()
         self.assertTrue(len(ret) == 3)
 
+    def test_add_new_item_to_mmcif_existing_cat(self):
+        data = {"category2": {"item1": "value1",
+                              },
+                }
+        test_json = os.path.join(self.tempDir, 'test.json')
+        with open(test_json, 'w') as out_file:
+            json.dump(data, out_file)
+        data_dict = self.ac.get_data(json_file=test_json)
+        ret = self.ac.add_to_cif(input_mmcif_file=self.simple_mmcif, output_mmcif_file=self.outfile,
+                                 data_dictionary=data_dict)
+        self.assertTrue(ret)
+        ret = self.ac.ch.getCategories()
+        self.assertTrue(len(ret) == 2)
+
+        # then add a new item to this category
+        data = {"category2": {"item2": "value1",
+                              },
+                }
+        test_json = os.path.join(self.tempDir, 'test.json')
+        with open(test_json, 'w') as out_file:
+            json.dump(data, out_file)
+        data_dict = self.ac.get_data(json_file=test_json)
+        ret = self.ac.add_to_cif(input_mmcif_file=self.outfile, output_mmcif_file=self.outfile,
+                                 data_dictionary=data_dict)
+        self.assertTrue(ret)
+        ret = self.ac.ch.getCategories()
+        self.assertTrue(len(ret) == 2)
+        for cat in ret:
+            print(self.ac.ch.getCategory(cat))
+
     def tearDown(self):
         if self.tempDir:
             shutil.rmtree(self.tempDir)

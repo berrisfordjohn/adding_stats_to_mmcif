@@ -83,7 +83,7 @@ class mmcifHandling:
         category = self.prepareCategory(category=category)
         current_values = self.getCategory(category=category)
         for mmcif_item in item_value_dictionary:
-            values = item_value_dictionary[mmcif_item]
+            values = self.check_string_list(item_value_dictionary[mmcif_item])
             current_values[category][mmcif_item] = values
         return current_values
 

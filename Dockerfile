@@ -1,4 +1,6 @@
-FROM python:3.9
+FROM python:3.9-alpine
+
+RUN apk add --update --no-cache g++ 
 
 RUN pip install -U setuptools pip wheel
 
@@ -8,7 +10,3 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 RUN pip install .
-
-RUN pip install --no-cache tox
-
-# CMD tox

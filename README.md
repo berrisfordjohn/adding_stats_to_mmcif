@@ -23,6 +23,5 @@ fasta_sequence_file is a fasta file containing the sequence of the polymers in F
 output_cif is the output modified mmCIF file which data from the aimless XML file.
 
 [![Build Status](https://travis-ci.org/berrisfordjohn/adding_stats_to_mmcif.svg?branch=master)](https://travis-ci.org/berrisfordjohn/adding_stats_to_mmcif)
-[![Coverage Status](https://coveralls.io/repos/github/berrisfordjohn/adding_stats_to_mmcif/badge.svg?branch=master)](https://coveralls.io/github/berrisfordjohn/adding_stats_to_mmcif?branch=master)
 [![Build Status](https://dev.azure.com/berrisfordjohn/berrisford_john/_apis/build/status/berrisfordjohn.adding_stats_to_mmcif?branchName=master)](https://dev.azure.com/berrisfordjohn/berrisford_john/_build/latest?definitionId=2&branchName=master)
 ![Build status](https://github.com/berrisfordjohn/adding_stats_to_mmcif/actions/workflows/tests.yml/badge.svg)

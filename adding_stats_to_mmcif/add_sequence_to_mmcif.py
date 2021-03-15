@@ -92,21 +92,26 @@ class ExtractFromMmcif:
         if self.mm:
             row_list = self.mm.getCategoryList('atom_site')
             for row in row_list:
-                entity_id = row['label_entity_id']
-                chain_id = row['auth_asym_id']
-                three_letter = row['auth_comp_id']
-                residue_number = row['auth_seq_id']
-                ins_code = row['pdbx_PDB_ins_code']
-                group_PDB = row['group_PDB']
+                entity_id = row.get('label_entity_id')
+                chain_id = row.get('auth_asym_id')
+                auth_three_letter = row.get('auth_comp_id')
+                label_three_letter = row.get('label_comp_id')
+                three_letter = label_three_letter if label_three_letter else auth_three_letter
+                residue_number = row.get('auth_seq_id')
+                # ins_code = row['pdbx_PDB_ins_code']
+                # group_PDB = row['group_PDB']
 
-                one_letter = self.get_one_letter_code(three_letter=three_letter)
+                if three_letter:
+                    one_letter = self.get_one_letter_code(three_letter=three_letter)
 
-                # logging.debug('{} {}{} {}'.format(entity_id, chain_id, residue_number, one_letter))
-                atom_site_dict.setdefault(entity_id, {}).setdefault(chain_id, [])
-                if residue_number not in atom_site_dict[entity_id][chain_id]:
-                    # logging.debug('new residue')
-                    atom_site_sequence_dict.setdefault(entity_id, {}).setdefault(chain_id, []).append(one_letter)
-                    atom_site_dict[entity_id][chain_id].append(residue_number)
+                    # logging.debug('{} {}{} {}'.format(entity_id, chain_id, residue_number, one_letter))
+                    atom_site_dict.setdefault(entity_id, {}).setdefault(chain_id, [])
+                    if residue_number not in atom_site_dict[entity_id][chain_id]:
+                        # logging.debug('new residue')
+                        atom_site_sequence_dict.setdefault(entity_id, {}).setdefault(chain_id, []).append(one_letter)
+                        atom_site_dict[entity_id][chain_id].append(residue_number)
+                else:
+                    raise 'Unknown three letter code for residue {} {}'.format(chain_id, residue_number)
 
         logging.debug('atom site dict: {}'.format(atom_site_dict))
         logging.debug('sequence dict: {}'.format(atom_site_sequence_dict))

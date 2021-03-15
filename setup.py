@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='adding_stats_to_mmcif',
-    version='0.4',
+    version='0.5',
     url='https://github.com/berrisfordjohn/adding_stats_to_mmcif',
     author='John Berrisford',
     test_suite='tests',
